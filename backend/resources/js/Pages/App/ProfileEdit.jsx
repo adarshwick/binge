@@ -15,12 +15,12 @@ export default function ProfileEdit() {
   }
   return (
     <MainAppShell>
-      <div className="max-w-xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
-        <form className="space-y-4" onSubmit={e => { e.preventDefault(); router.post(route('app.profile.bio'), { bio }) }}>
+        <form className="space-y-4 bg-white rounded-2xl shadow p-4" onSubmit={e => { e.preventDefault(); router.post(route('app.profile.bio'), { bio }) }}>
           <div>
             <label className="block text-sm font-medium mb-1">Bio</label>
-            <textarea className="w-full border rounded px-3 py-2" rows={4} value={bio} onChange={e => setBio(e.target.value)} />
+            <textarea className="w-full border rounded-2xl px-3 py-2" rows={4} value={bio} onChange={e => setBio(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Photos</label>
@@ -28,17 +28,17 @@ export default function ProfileEdit() {
             <div className="grid grid-cols-3 gap-2 mt-3">
               {photos.map(p => (
                 <div key={p.id} className="relative">
-                  <img src={p.url} alt="" className="w-full h-24 object-cover rounded" />
-                  <button type="button" className="absolute top-1 right-1 bg-white border rounded px-2 py-1 text-xs" onClick={() => router.delete(route('app.profile.photos.delete', { id: p.id }))}>Delete</button>
+                  <img src={p.url} alt="" className="w-full h-24 object-cover rounded-2xl" />
+                  <button type="button" className="absolute top-1 right-1 bg-white border rounded-full px-2 py-1 text-xs" onClick={() => router.delete(route('app.profile.photos.delete', { id: p.id }))}>Delete</button>
                 </div>
               ))}
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Prompts</label>
-            <input className="w-full border rounded px-3 py-2" placeholder="Add prompt answers" />
+            <input className="w-full border rounded-2xl px-3 py-2" placeholder="Add prompt answers" />
           </div>
-          <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+          <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded-full">Save</button>
         </form>
       </div>
     </MainAppShell>

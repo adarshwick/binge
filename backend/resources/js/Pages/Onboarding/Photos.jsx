@@ -26,13 +26,13 @@ export default function Photos() {
     } catch {}
   }
   return (
-    <div className="min-h-screen bg-white px-6 py-6">
-      <div className="max-w-xl mx-auto">
+    <div className="min-h-screen bg-white grid grid-cols-1 lg:grid-cols-2">
+      <div className="px-6 py-6">
         <h1 className="text-2xl font-bold mb-2">Upload 2–9 Photos</h1>
         <p className="text-gray-600 mb-4">Use camera or choose from gallery on mobile.</p>
-        <div className="border rounded p-4 mb-4">
+        <div className="bg-white rounded-2xl shadow p-4 mb-4">
           <div className="flex items-center gap-3 mb-3">
-            <button className="px-3 py-2 border rounded" onClick={takePhoto}>Take Photo</button>
+            <button className="px-3 py-2 border rounded-full" onClick={takePhoto}>Take Photo</button>
             <input type="file" multiple accept="image/*" onChange={onPick} />
           </div>
           <div className="grid grid-cols-3 gap-2 mt-4">
@@ -43,7 +43,7 @@ export default function Photos() {
             ))}
           </div>
           <div className="mt-3">
-            <button className="px-3 py-2 bg-pink-600 text-white rounded" onClick={async () => {
+            <button className="px-3 py-2 bg-pink-600 text-white rounded-full" onClick={async () => {
               for (const f of files) {
                 const form = new FormData()
                 form.append('photo', f)
@@ -55,10 +55,10 @@ export default function Photos() {
           </div>
         </div>
         {verificationMode !== 'off' && (
-          <div className="border rounded p-4 mb-4">
+          <div className="bg-white rounded-2xl shadow p-4 mb-4">
             <h2 className="font-medium mb-2">Selfie for Verification {verificationMode === 'optional' ? '(optional)' : '(required)'}</h2>
             <input type="file" accept="image/*" onChange={e => setSelfie(e.target.files?.[0] || null)} />
-            <button className="mt-2 px-4 py-2 border rounded" onClick={() => {
+            <button className="mt-2 px-4 py-2 border rounded-full" onClick={() => {
               if (!selfie) return
               const form = new FormData()
               form.append('photo', selfie)
@@ -66,9 +66,19 @@ export default function Photos() {
             }}>Submit Selfie</button>
           </div>
         )}
-        <div className="flex justify-between">
-          <Link href={route('onboarding.start')} className="px-4 py-2 border rounded">Back</Link>
-          <Link href={route('onboarding.profile')} className="px-4 py-2 bg-pink-600 text-white rounded">Next</Link>
+        <div className="px-6 py-6 flex justify-between">
+          <Link href={route('onboarding.start')} className="px-4 py-2 border rounded-full">Back</Link>
+          <Link href={route('onboarding.profile')} className="px-4 py-2 bg-pink-600 text-white rounded-full">Next</Link>
+        </div>
+      </div>
+      <div className="hidden lg:flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-100">
+        <div className="max-w-lg px-10 py-10">
+          <div className="text-2xl font-semibold mb-3">Photo Tips</div>
+          <ul className="text-gray-700 space-y-2">
+            <li>• Clear, well-lit photos</li>
+            <li>• Show your interests</li>
+            <li>• Keep it authentic</li>
+          </ul>
         </div>
       </div>
     </div>
