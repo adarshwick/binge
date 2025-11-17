@@ -38,32 +38,28 @@ export default function Discover() {
   }
   return (
     <MainAppShell>
-      <div className="max-w-2xl mx-auto">
+      <div className="auth-card">
         <h1 className="text-2xl font-bold mb-4">Discover</h1>
         <div className="space-y-4">
           {cards.map(c => (
-            <div key={c.id} className="bg-white rounded-2xl shadow hover:shadow-lg overflow-hidden">
-              <div className="relative">
-                {c.photo ? (
-                  <img src={c.photo} alt={c.name} loading="lazy" className="w-full h-64 object-cover" />
-                ) : (
-                  <div className="w-full h-64 bg-gradient-to-br from-pink-100 to-purple-100" />
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 text-white">
+            <div key={c.id} className="card">
+              <div className="card-hero">
+                {c.photo ? (<img src={c.photo} alt={c.name} loading="lazy" />) : (<div style={{height:'16rem', backgroundImage:'linear-gradient(135deg,#ffe4ef,#f3e8ff)'}} />)}
+                <div className="overlay">
                   <div className="flex items-center gap-2 text-lg font-semibold">
                     <span>{c.name}</span>
-                    {c.boosted && <span className="px-2 py-0.5 text-xs bg-purple-600/80 rounded">Boosted</span>}
+                    {c.boosted && <span className="badge badge-boost">Boosted</span>}
                   </div>
                   <div className="text-sm opacity-90">{typeof c.distanceKm === 'number' ? `${c.distanceKm} km away` : ''}</div>
                 </div>
               </div>
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <button className="px-4 py-2 rounded-full border border-gray-300" onClick={() => act(c.id, 'pass')}>Pass</button>
-                  <button className="px-4 py-2 rounded-full bg-pink-600 text-white" onClick={() => act(c.id, 'like')}>Like</button>
-                  <button className="px-4 py-2 rounded-full bg-pink-500 text-white" onClick={() => act(c.id, 'super_like')}>Super Like</button>
+                  <button className="btn btn-ghost" onClick={() => act(c.id, 'pass')}>Pass</button>
+                  <button className="btn btn-primary" onClick={() => act(c.id, 'like')}>Like</button>
+                  <button className="btn btn-primary" onClick={() => act(c.id, 'super_like')}>Super Like</button>
                 </div>
-                <button className="px-4 py-2 rounded-full bg-purple-600 text-white" onClick={() => doBoost()}>Boost</button>
+                <button className="btn btn-outline" onClick={() => doBoost()}>Boost</button>
               </div>
             </div>
           ))}
