@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BingeDate – Auth UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Custom font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+ <style>
+  :root {
+    --bg-dark: #050816;
+    --accent-1: #ff3366;
+    --accent-2: #7b3eff;
+    --accent-3: #ffb347;
+    --surface: rgba(10, 12, 25, 0.85);
+    --border-soft: rgba(255,255,255,0.06);
+    --text-main: #f9fafb;
+    --text-muted: #94a3b8;
+    --danger: #f97373;
+    --radius-xl: 999px;
+    --radius-lg: 24px;
+    --transition-fast: 0.18s ease-out;
+    --shadow-soft: 0 24px 60px rgba(0,0,0,0.45);
+    /* single source of truth for hero image */
+    --hero-bg: url("images/hero-1.jpg");
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px circle at 0% 0%, #3b82f6 0, transparent 55%),
+      radial-gradient(1200px circle at 100% 100%, #ec4899 0, transparent 55%),
+      #020617;
+    color: var(--text-main);
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .app-shell {
+    width: 100%;
+    max-width: 1240px;
+    margin: 16px;
+    border-radius: 32px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    background: rgba(15, 23, 42, 0.85);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(26px);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+  }
+
+  /* LEFT PANEL */
+
+  .auth-panel {
+    position: relative;
+    padding: 24px 26px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+      radial-gradient(circle at 0 0, rgba(148, 163, 255, 0.35), transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.35), transparent 60%),
+      linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+  }
+
+  .auth-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: conic-gradient(from 210deg, var(--accent-1), var(--accent-2), #22d3ee, var(--accent-1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(248,113,113,0.6);
+  }
+
+  .brand-logo span {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .brand-title {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(120deg, #f97316, #ec4899, #6366f1);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .brand-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .brand-right {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  .auth-card {
+    padding: 20px 18px 16px;
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+  }
+
+  .auth-copy {
+    margin-bottom: 18px;
+  }
+
+  .auth-tagline {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-3);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .auth-title {
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  .auth-title span {
+    background: linear-gradient(115deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .auth-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* Screens */
+
+  .screen { display: none; animation: fadeIn 200ms ease-out; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-grid { display: grid; gap: 12px; }
+
+  .field-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+
+  .field-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .field-helper {
+    font-size: 11px;
+    color: var(--accent-3);
+  }
+
+  .field { position: relative; }
+
+  .field input,
+  .field select {
+    width: 100%;
+    border-radius: 18px;
+    border: 1px solid var(--border-soft);
+    padding: 10px 12px;
+    padding-right: 40px;
+    font-size: 13px;
+    color: var(--text-main);
+    background: rgba(15,23,42,0.90);
+    outline: none;
+    transition: border var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .field input::placeholder { color: rgba(148,163,184,0.8); }
+
+  .field input:focus,
+  .field select:focus {
+    border-color: rgba(248,113,113,0.9);
+    background: rgba(15,23,42,0.96);
+    box-shadow: 0 0 0 1px rgba(248,113,113,0.9);
+    transform: translateY(-0.5px);
+  }
+
+  .field-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: rgba(148,163,184,0.9);
+    pointer-events: none;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .field-row .field:first-child { flex: 0 0 90px; }
+  .field-row .field:last-child { flex: 1; }
+
+  .otp-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .otp-input {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+    background: rgba(15,23,42,0.9);
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-main);
+    outline: none;
+    transition: border var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .otp-input:focus {
+    border-color: rgba(248,113,113,0.95);
+    box-shadow: 0 0 0 1px rgba(248,113,113,0.95);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    width: 100%;
+    border-radius: var(--radius-xl);
+    border: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    box-shadow: 0 18px 40px rgba(248,113,113,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast), opacity var(--transition-fast);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 22px 55px rgba(248,113,113,0.7);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    filter: brightness(0.98);
+    box-shadow: 0 14px 30px rgba(15,23,42,0.9);
+  }
+
+  .btn-outline {
+    width: 100%;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(148,163,184,0.7);
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background var(--transition-fast), border var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .btn-outline:hover {
+    background: rgba(15,23,42,0.9);
+    transform: translateY(-1px);
+  }
+
+  .btn-link {
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 12px;
+    color: var(--accent-3);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .link-inline {
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 12px;
+    color: var(--accent-3);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+
+  .auth-links-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 12px;
+  }
+
+  .under-card {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .auth-footer {
+    margin-top: 16px;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .entry-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .entry-tertiary {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stepper-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .stepper-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(148,163,184,0.6);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .step { display: none; animation: fadeIn 200ms ease-out; }
+  .step.active { display: block; }
+
+  .step-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .btn-secondary {
+    flex: 0 0 auto;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(148,163,184,0.7);
+    padding: 10px 16px;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(15,23,42,0.9);
+    transform: translateY(-1px);
+  }
+
+  .step-description {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .register-bottom {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* RIGHT PANEL */
+
+  .promo-panel {
+    position: relative;
+    overflow: hidden;
+    background-color: #020617;
+    display: flex;
+    align-items: flex-end;
+    justify-content: stretch;
+  }
+
+  .promo-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.2)),
+      var(--hero-bg) center/cover no-repeat;
+    transform: scale(1.05);
+    filter: saturate(1.1) contrast(1.1);
+  }
+
+  .promo-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 170% at 0 100%, rgba(59,130,246,0.65), transparent 65%),
+      radial-gradient(120% 200% at 100% 0, rgba(236,72,153,0.7), transparent 55%);
+    mix-blend-mode: soft-light;
+    opacity: 0.95;
+  }
+
+  .promo-content {
+    position: relative;
+    z-index: 2;
+    padding: 32px 32px 40px;
+    color: #f9fafb;
+    max-width: 540px;
+  }
+
+  .promo-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .promo-eyebrow span {
+    background: rgba(15,23,42,0.68);
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.4);
+    backdrop-filter: blur(18px);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .promo-title {
+    font-size: 34px;
+    line-height: 1.1;
+    font-weight: 800;
+    text-shadow: 0 14px 40px rgba(15,23,42,0.85);
+    margin-bottom: 16px;
+  }
+
+  .promo-title span { display: block; }
+
+  .promo-body {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 420px;
+    color: #e5e7eb;
+    text-shadow: 0 10px 20px rgba(15,23,42,0.8);
+  }
+
+  .promo-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+    font-size: 11px;
+  }
+
+  .promo-pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.75);
+    border: 1px solid rgba(148,163,184,0.5);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .promo-pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #22c55e;
+  }
+
+  /* MODALS */
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 40;
+    padding: 16px;
+    backdrop-filter: blur(14px);
+  }
+
+  .overlay.active { display: flex; }
+
+  .overlay-card {
+    max-width: 420px;
+    background: rgba(15,23,42,0.96);
+    border-radius: 24px;
+    padding: 22px 20px 18px;
+    border: 1px solid rgba(148,163,184,0.5);
+    color: var(--text-main);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.65);
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .overlay-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .overlay-body {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .overlay-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .btn-small-primary {
+    border-radius: var(--radius-xl);
+    border: none;
+    padding: 9px 15px;
+    background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .overlay-close {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    cursor: pointer;
+    font-size: 18px;
+    color: rgba(148,163,184,0.85);
+  }
+
+  .overlay-close:hover { color: #e5e7eb; }
+
+  .terms-body p { margin-bottom: 10px; }
+  .terms-body ul { padding-left: 16px; margin-bottom: 8px; }
+  .terms-body li { margin-bottom: 4px; }
+
+  /* RESPONSIVE */
+
+  @media (max-width: 900px) {
+    .app-shell {
+      grid-template-columns: minmax(0, 1fr);
+      margin: 0;
+      border-radius: 0;
+      min-height: 100vh;
+    }
+
+    .promo-panel {
+      display: none; /* hide right side on mobile */
+    }
+
+    /* use hero image behind auth on mobile */
+    .auth-panel {
+      padding: 22px 18px 18px;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.92), rgba(15,23,42,0.4)),
+        var(--hero-bg) center/cover no-repeat;
+      background-attachment: fixed;
+    }
+
+    .auth-card { padding: 18px 16px 14px; }
+    .auth-title { font-size: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .brand-title { font-size: 18px; }
+    .btn-primary, .btn-outline { font-size: 13px; }
+    .otp-input { width: 38px; height: 38px; }
+    .field-row .field:first-child { flex: 0 0 76px; }
+  }
+</style>
+
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- LEFT: BRAND + AUTH -->
+  <section class="auth-panel">
+
+    <header class="auth-header">
+      <div class="brand">
+        <div class="brand-logo"><span>❤</span></div>
+        <div class="brand-text">
+          <div class="brand-title">BingeDate</div>
+        </div>
+      </div>
+      <div class="brand-right">
+        <div>Meet real people</div>
+        <div>No noise.</div>
+      </div>
+    </header>
+
+    <main>
+      <div class="auth-card">
+
+        <div class="auth-copy" id="authCopy">
+          <div class="auth-tagline">Dating that feels human</div>
+          <h1 class="auth-title">
+            <span>Start something real.</span>
+          </h1>
+          <p class="auth-subtitle">
+            A fresh app with zero legacy data. No recycled matches, no ghosts. Just you,
+            your story, and people who want the same thing.
+          </p>
+        </div>
+
+        <!-- ENTRY SCREEN (no forms) -->
+        <section id="screen-entry" class="screen active">
+          <div class="entry-actions">
+            <button type="button" class="btn-primary" data-show-screen="register">
+              Create account
+            </button>
+            <button type="button" class="btn-outline" data-show-screen="login">
+              Sign in
+            </button>
+          </div>
+
+          <div class="entry-tertiary">
+            <span>By continuing you agree you’re 18+.</span>
+            <button type="button" class="btn-link" id="openTerms">Terms of Service</button>
+          </div>
+        </section>
+
+        <!-- LOGIN SCREEN -->
+        <section id="screen-login" class="screen">
+          <form id="loginForm" class="form-grid" autocomplete="off">
+            <div>
+              <div class="field-label-row">
+                <label class="field-label" for="loginIdentifier">Email address / Phone</label>
+              </div>
+              <div class="field">
+                <input id="loginIdentifier" name="identifier" type="text" inputmode="email"
+                       placeholder="you@example.com or +91 98765 43210" required>
+                <div class="field-icon">✉</div>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div id="loginPasswordRow">
+              <div class="field-label-row">
+                <label class="field-label" for="loginPassword">Password</label>
+                <button type="button" class="link-inline" id="toggleLoginMode">Login via OTP instead</button>
+              </div>
+              <div class="field">
+                <input id="loginPassword" name="password" type="password" placeholder="At least 8 characters" required>
+                <div class="field-icon">• • •</div>
+              </div>
+            </div>
+
+            <!-- OTP version -->
+            <div id="loginOtpRow" style="display:none;">
+              <div class="field-label-row">
+                <span class="field-label">Enter 4 digit OTP</span>
+                <button type="button" class="link-inline" id="toggleLoginModeBack">Login via password instead</button>
+              </div>
+              <div class="otp-row">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="login-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="login-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="login-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="login-otp">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <span>Sign in</span> <span>→</span>
+            </button>
+
+            <div class="auth-links-row">
+              <button type="button" class="link-inline" data-show-screen="forgot">Forgot password?</button>
+              <span>New here? <button type="button" class="link-inline" data-show-screen="register">Create account</button></span>
+            </div>
+          </form>
+        </section>
+
+        <!-- REGISTER STEPPER -->
+        <section id="screen-register" class="screen">
+          <form id="registerForm" class="form-grid" autocomplete="off">
+            <div class="stepper-header">
+              <span class="step-description" id="stepDescription">Step 1 of 7</span>
+              <span class="stepper-badge" id="stepTag">Phone number</span>
+            </div>
+
+            <!-- Step 1: phone -->
+            <div class="step active" data-step="1">
+              <p class="step-description">What’s your phone number? We’ll use it to verify your account and keep out spam.</p>
+              <div class="field-label-row">
+                <span class="field-label">Mobile number</span>
+                <span class="field-helper">Required</span>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <input id="regCountryCode" type="text" placeholder="+91" value="+91">
+                </div>
+                <div class="field">
+                  <input id="regMobile" type="tel" placeholder="98765 43210" required>
+                  <div class="field-icon">📱</div>
+                </div>
+              </div>
+              <div class="step-actions">
+                <button type="button" class="btn-primary" data-step-next>Next</button>
+              </div>
+            </div>
+
+            <!-- Step 2: phone OTP -->
+            <div class="step" data-step="2">
+              <p class="step-description">We sent a 4 digit code to your phone. Enter it below.</p>
+              <div class="field-label-row">
+                <span class="field-label">Mobile OTP</span>
+              </div>
+              <div class="otp-row">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-mobile-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-mobile-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-mobile-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-mobile-otp">
+              </div>
+              <div class="step-actions">
+                <button type="button" class="btn-secondary" data-step-back>Back</button>
+                <button type="button" class="btn-primary" data-step-next>Verify &amp; continue</button>
+              </div>
+            </div>
+
+            <!-- Step 3: email -->
+            <div class="step" data-step="3">
+              <p class="step-description">What’s your email? We’ll only use it for login and important updates.</p>
+              <div class="field-label-row">
+                <label class="field-label" for="regEmail">Email address</label>
+                <span class="field-helper">Optional but helpful</span>
+              </div>
+              <div class="field">
+                <input id="regEmail" type="email" placeholder="you@example.com">
+                <div class="field-icon">✉</div>
+              </div>
+              <div class="step-actions">
+                <button type="button" class="btn-secondary" data-step-back>Back</button>
+                <button type="button" class="btn-primary" data-step-next>Next</button>
+              </div>
+            </div>
+
+            <!-- Step 4: email OTP -->
+            <div class="step" data-step="4">
+              <p class="step-description">Enter the 4 digit code we emailed you.</p>
+              <div class="field-label-row">
+                <span class="field-label">Email OTP</span>
+              </div>
+              <div class="otp-row">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-email-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-email-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-email-otp">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" data-group="reg-email-otp">
+              </div>
+              <div class="step-actions">
+                <button type="button" class="btn-secondary" data-step-back>Back</button>
+                <button type="button" class="btn-primary" data-step-next>Verify &amp; continue</button>
+              </div>
+            </div>
+
+            <!-- Step 5: name -->
+            <div class="step" data-step="5">
+              <p class="step-description">Tell us your name. We’ll use this on your profile.</p>
+              <div class="field-label-row">
+                <label class="field-label" for="regFirst">First name</label>
+              </div>
+              <div class="field">
+                <input id="regFirst" type="text" placeholder="First name" required>
+              </div>
+
+              <div class="field-label-row" style="margin-top:8px;">
+                <label class="field-label" for="regLast">Last name</label>
+              </div>
+              <div class="field">
+                <input id="regLast" type="text" placeholder="Last name (only shown to matches)">
+              </div>
+              <p class="step-description">Your last name is only visible to people you match with. You can skip it for now.</p>
+
+              <div class="step-actions">
+                <button type="button" class="btn-secondary" data-step-back>Back</button>
+                <button type="button" class="btn-primary" data-step-next>Next</button>
+              </div>
+            </div>
+
+            <!-- Step 6: DOB -->
+            <div class="step" data-step="6">
+              <p class="step-description">For safety and matching, we need your date of birth.</p>
+              <div class="field-label-row">
+                <label class="field-label" for="regDob">Date of birth</label>
+                <span class="field-helper">18+ only</span>
+              </div>
+              <div class="field">
+                <input id="regDob" type="date" required>
+                <div class="field-icon">📅</div>
+              </div>
+              <p class="step-description">We’ll show your age, not your full birthdate.</p>
+
+              <div class="step-actions">
+                <button type="button" class="btn-secondary" data-step-back>Back</button>
+                <button type="button" class="btn-primary" data-step-next>Confirm age</button>
+              </div>
+            </div>
+
+            <!-- Step 7: password -->
+            <div class="step" data-step="7">
+              <p class="step-description">Create a password so you can sign in securely.</p>
+              <div class="field-label-row">
+                <label class="field-label" for="regPassword">Password</label>
+              </div>
+              <div class="field">
+                <input id="regPassword" type="password" placeholder="At least 8 characters" required>
+                <div class="field-icon">• • •</div>
+              </div>
+
+              <div class="step-actions">
+                <button type="button" class="btn-secondary" data-step-back>Back</button>
+                <button type="submit" class="btn-primary">
+                  <span>Register</span> <span>❤</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div class="register-bottom">
+            <span>Already registered?</span>
+            <button type="button" class="link-inline" data-show-screen="login">Sign in</button>
+          </div>
+        </section>
+
+        <!-- FORGOT PASSWORD -->
+        <section id="screen-forgot" class="screen">
+          <form id="forgotForm" class="form-grid" autocomplete="off">
+            <div class="field-label-row">
+              <label class="field-label" for="forgotIdentifier">Email address / Phone</label>
+            </div>
+            <div class="field">
+              <input id="forgotIdentifier" name="identifier" type="text"
+                     placeholder="Enter the email or phone linked to your account" required>
+              <div class="field-icon">✉</div>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <span>Send reset link / OTP</span>
+            </button>
+
+            <div class="auth-links-row">
+              <button type="button" class="link-inline" data-show-screen="login">Back to sign in</button>
+            </div>
+          </form>
+        </section>
+
+      </div>
+
+      <div class="under-card">
+        <span>
+          <button type="button" class="btn-link" id="openTermsBottom">Terms of Service</button>
+		            <button type="button" class="btn-link" id="openTermsBottom">Terms of Service</button>New beta experience
+Private. Invite-only.
+
+
+        </span>
+      </div>
+
+      <div class="auth-footer">
+        Prototype UI for a new dating app. All copy & imagery are generic and not linked to any real users.
+      </div>
+    </main>
+
+  </section>
+
+  <!-- RIGHT: PROMO / IMAGE SIDE (hidden on mobile) -->
+  <aside class="promo-panel" aria-hidden="true">
+    <div class="promo-bg"></div>
+    <div class="promo-overlay"></div>
+    <div class="promo-content">
+      <div class="promo-eyebrow">
+        <span>
+          <div class="promo-pill-dot"></div>
+          Curated, not crowded
+        </span>
+      </div>
+      <h2 class="promo-title">
+        <span>Meet real people.</span>
+        <span>Find real connections.</span>
+      </h2>
+      <p class="promo-body">
+        BingeDate is designed like your favourite food app: clean, fast, and made for discovery.
+        Swipe through curated matches, not an endless crowd. Verified photos, prompts that matter,
+        and controls that keep your information private until you’re ready.
+      </p>
+      <div class="promo-pills">
+        <div class="promo-pill"><span class="promo-pill-dot"></span>Verified profiles only</div>
+        <div class="promo-pill">🎯 Matches tuned to your vibe</div>
+        <div class="promo-pill">🌓 Dark-mode ready</div>
+        <div class="promo-pill">🔐 Privacy-first by default</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- AGE CONFIRM MODAL -->
+<div id="ageModal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ageModalTitle">
+  <div class="overlay-card">
+    <div class="overlay-close" data-close-overlay>&times;</div>
+    <h3 id="ageModalTitle" class="overlay-title">Confirm your age</h3>
+    <div class="overlay-body" id="ageModalBody"></div>
+    <div class="overlay-actions" id="ageModalActions">
+      <button class="btn-secondary" type="button" data-close-overlay>Go back</button>
+      <button class="btn-small-primary" type="button" id="confirmAgeBtn">Yes, confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div id="termsModal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+  <div class="overlay-card">
+    <div class="overlay-close" data-close-overlay>&times;</div>
+    <h3 id="termsModalTitle" class="overlay-title">Terms of Service</h3>
+    <div class="overlay-body terms-body">
+      <p>
+        These Terms govern your use of this prototype dating experience (“BingeDate”). By creating
+        an account or signing in, you confirm that you are at least 18 years old and that you accept
+        these Terms.
+      </p>
+      <p><strong>1. Eligibility</strong></p>
+      <p>You must be 18 or older to use BingeDate. We may ask you to verify your age and identity.</p>
+      <p><strong>2. Behaviour &amp; respect</strong></p>
+      <ul>
+        <li>Be honest in your profile and conversations.</li>
+        <li>No harassment, hate speech, threats, or illegal content.</li>
+        <li>Do not share someone else’s private information without consent.</li>
+      </ul>
+      <p><strong>3. Content you share</strong></p>
+      <p>
+        You own the photos, prompts, and other content you upload. You give BingeDate a limited licence
+        to display that content in the app to make matching work.
+      </p>
+      <p><strong>4. No guarantees</strong></p>
+      <p>
+        We can’t promise any specific matches or outcomes. This app is provided “as is”, without
+        warranties of any kind. Use your judgement before meeting anyone in person.
+      </p>
+      <p><strong>5. Safety</strong></p>
+      <ul>
+        <li>Meet in public places for early dates.</li>
+        <li>Tell a friend where you’re going.</li>
+        <li>Block or report anyone who makes you feel unsafe.</li>
+      </ul>
+      <p><strong>6. Changes</strong></p>
+      <p>
+        We may update these Terms over time. The latest version will always be shown here. By continuing
+        to use BingeDate you agree to the current Terms.
+      </p>
+    </div>
+    <div class="overlay-actions">
+      <button class="btn-small-primary" type="button" data-close-overlay>I understand</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Basic screen switching: entry / login / register / forgot */
+
+  const screens = {
+    entry: document.getElementById("screen-entry"),
+    login: document.getElementById("screen-login"),
+    register: document.getElementById("screen-register"),
+    forgot: document.getElementById("screen-forgot"),
+  };
+
+  function showScreen(name) {
+    Object.entries(screens).forEach(([key, el]) => {
+      if (!el) return;
+      el.classList.toggle("active", key === name);
+    });
+
+    // Adjust heading copy lightly if you want different text per screen
+    const authCopy = document.getElementById("authCopy");
+    if (!authCopy) return;
+
+    if (name === "entry") {
+      authCopy.querySelector(".auth-title").innerHTML = "<span>Start something real.</span>";
+      authCopy.querySelector(".auth-subtitle").textContent =
+        "A fresh app with zero legacy data. No recycled matches, no ghosts. Just you, your story, and people who want the same thing.";
+    } else if (name === "login") {
+      authCopy.querySelector(".auth-title").innerHTML = "<span>Welcome back.</span>";
+      authCopy.querySelector(".auth-subtitle").textContent =
+        "Sign in to pick up where you left off. Your conversations and matches stay private to you.";
+    } else if (name === "register") {
+      authCopy.querySelector(".auth-title").innerHTML = "<span>Let’s set up your account.</span>";
+      authCopy.querySelector(".auth-subtitle").textContent =
+        "A few quick steps so we can keep the community safe and curated.";
+    } else if (name === "forgot") {
+      authCopy.querySelector(".auth-title").innerHTML = "<span>Reset your access.</span>";
+      authCopy.querySelector(".auth-subtitle").textContent =
+        "We’ll send a link or code to help you get back into your account.";
+    }
+  }
+
+  document.querySelectorAll("[data-show-screen]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-show-screen");
+      showScreen(target);
+    });
+  });
+
+  /* Login password <-> OTP toggle */
+
+  const loginPasswordRow = document.getElementById("loginPasswordRow");
+  const loginOtpRow = document.getElementById("loginOtpRow");
+  const toggleLoginModeBtn = document.getElementById("toggleLoginMode");
+  const toggleLoginModeBackBtn = document.getElementById("toggleLoginModeBack");
+
+  function showLoginOtp() {
+    loginPasswordRow.style.display = "none";
+    loginOtpRow.style.display = "block";
+  }
+
+  function showLoginPassword() {
+    loginPasswordRow.style.display = "block";
+    loginOtpRow.style.display = "none";
+  }
+
+  toggleLoginModeBtn?.addEventListener("click", showLoginOtp);
+  toggleLoginModeBackBtn?.addEventListener("click", showLoginPassword);
+
+  /* OTP behaviours */
+
+  function setupOtpInputs() {
+    document.querySelectorAll(".otp-input").forEach(input => {
+      input.addEventListener("input", (e) => {
+        const value = e.target.value.replace(/\D/g, "").slice(0, 1);
+        e.target.value = value;
+        const group = e.target.dataset.group;
+        if (value && group) {
+          const groupElems = Array.from(document.querySelectorAll('.otp-input[data-group="' + group + '"]'));
+          const idx = groupElems.indexOf(e.target);
+          if (idx > -1 && idx < groupElems.length - 1) {
+            groupElems[idx + 1].focus();
+          }
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !e.target.value) {
+          const group = e.target.dataset.group;
+          if (group) {
+            const groupElems = Array.from(document.querySelectorAll('.otp-input[data-group="' + group + '"]'));
+            const idx = groupElems.indexOf(e.target);
+            if (idx > 0) groupElems[idx - 1].focus();
+          }
+        }
+      });
+    });
+  }
+  setupOtpInputs();
+
+  /* Overlays */
+
+  function openOverlay(id) {
+    document.getElementById(id)?.classList.add("active");
+  }
+  function closeOverlay() {
+    document.querySelectorAll(".overlay.active").forEach(el => el.classList.remove("active"));
+  }
+
+  document.querySelectorAll("[data-close-overlay]").forEach(btn => {
+    btn.addEventListener("click", closeOverlay);
+  });
+
+  document.querySelectorAll(".overlay").forEach(overlay => {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeOverlay();
+    });
+  });
+
+  // Open Terms from both locations
+  document.getElementById("openTerms")?.addEventListener("click", () => openOverlay("termsModal"));
+  document.getElementById("openTermsBottom")?.addEventListener("click", () => openOverlay("termsModal"));
+
+  /* Register stepper */
+
+  let currentStep = 1;
+  const maxStep = 7;
+  const stepElems = document.querySelectorAll(".step");
+  const stepDescriptionEl = document.getElementById("stepDescription");
+  const stepTagEl = document.getElementById("stepTag");
+
+  const stepTags = {
+    1: "Phone number",
+    2: "Phone verification",
+    3: "Email",
+    4: "Email verification",
+    5: "Your name",
+    6: "Age & safety",
+    7: "Password",
+  };
+
+  const stepDescriptions = {
+    1: "Step 1 of 7",
+    2: "Step 2 of 7",
+    3: "Step 3 of 7",
+    4: "Step 4 of 7",
+    5: "Step 5 of 7",
+    6: "Step 6 of 7",
+    7: "Step 7 of 7",
+  };
+
+  function updateStepUI() {
+    stepElems.forEach(el => {
+      const s = Number(el.getAttribute("data-step"));
+      el.classList.toggle("active", s === currentStep);
+    });
+    if (stepDescriptionEl) stepDescriptionEl.textContent = stepDescriptions[currentStep];
+    if (stepTagEl) stepTagEl.textContent = stepTags[currentStep];
+  }
+
+  function goToStep(step) {
+    if (step < 1 || step > maxStep) return;
+    currentStep = step;
+    updateStepUI();
+  }
+
+  // Next / Back buttons
+  document.querySelectorAll("[data-step-next]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (currentStep === 6) {
+        // Age confirmation step
+        const dobVal = document.getElementById("regDob").value;
+        if (!dobVal) {
+          alert("Please enter your date of birth.");
+          return;
+        }
+        const age = calculateAge(dobVal);
+        const ageModalBody = document.getElementById("ageModalBody");
+        const ageModalActions = document.getElementById("ageModalActions");
+        const confirmAgeBtn = document.getElementById("confirmAgeBtn");
+
+        if (age === null) {
+          alert("Please enter a valid date of birth.");
+          return;
+        }
+
+        if (age < 18) {
+          if (ageModalBody) {
+            ageModalBody.innerHTML = `
+              <p>Our community is strictly 18+.</p>
+              <p>Based on your date of birth, you appear to be <strong>${age}</strong> years old.
+              You won’t be able to create an account right now.</p>`;
+          }
+          if (ageModalActions) {
+            // hide confirm button for under-age
+            confirmAgeBtn.style.display = "none";
+          }
+          openOverlay("ageModal");
+        } else {
+          if (ageModalBody) {
+            ageModalBody.innerHTML = `
+              <p>You appear to be <strong>${age}</strong> years old.</p>
+              <p>By confirming, you agree that this age is correct and understand that your date
+              of birth can’t be changed later for safety reasons.</p>`;
+          }
+          if (ageModalActions) {
+            confirmAgeBtn.style.display = "inline-flex";
+          }
+          openOverlay("ageModal");
+
+          confirmAgeBtn.onclick = () => {
+            closeOverlay();
+            goToStep(7); // proceed to password step
+          };
+        }
+      } else {
+        goToStep(currentStep + 1);
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-step-back]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      goToStep(currentStep - 1);
+    });
+  });
+
+  // Age calculation helper
+  function calculateAge(dateStr) {
+    const dob = new Date(dateStr);
+    if (Number.isNaN(dob.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    return age;
+  }
+
+  // Register submit
+  const registerForm = document.getElementById("registerForm");
+  registerForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    alert("In the real app, this is where we’d create the account with your details.");
+    registerForm.reset();
+    currentStep = 1;
+    updateStepUI();
+    showScreen("login");
+  });
+
+  // Simple demo handlers for login & forgot
+  document.getElementById("loginForm")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    alert("Login requested. Hook this up to your auth API.");
+  });
+
+  document.getElementById("forgotForm")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    alert("A reset link / OTP would be sent here in the real app.");
+  });
+
+  // Initialize UI
+  updateStepUI();
+  showScreen("entry");
+</script>
+</body>
+</html>

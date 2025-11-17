@@ -10,7 +10,13 @@ export default function Discover() {
   const [boostModal, setBoostModal] = useState(false)
   const [pendingUser, setPendingUser] = useState(null)
   async function act(id, type) {
-    if (type === 'super_like') { setPendingUser(id); setSuperLikeModal(true); return }
+    if (type === 'super_like') {
+      setPendingUser(id)
+      const r = await fetch(route('app.like'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest','Content-Type':'application/json' }, body: JSON.stringify({ to_user_id: id, type }) })
+      if (r.status === 402) { setSuperLikeModal(true); return }
+      setCards(prev => prev.filter(c => c.id !== id))
+      return
+    }
     router.post(route('app.like'), { to_user_id: id, type }, { preserveScroll: true })
     setCards(prev => prev.filter(c => c.id !== id))
   }

@@ -80,7 +80,8 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Onboarding/Photos');
     })->name('onboarding.photos');
     Route::get('/onboarding/profile', function () {
-        return Inertia::render('Onboarding/Profile');
+        $prompts = \App\Models\ProfilePrompt::where('active', true)->get(['id','text']);
+        return Inertia::render('Onboarding/Profile', ['prompts' => $prompts]);
     })->name('onboarding.profile');
     Route::get('/onboarding/filters', function () {
         return Inertia::render('Onboarding/Filters');

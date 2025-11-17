@@ -1,0 +1,2465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BingeDate – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #050816;
+      --accent-1: #ff3366;
+      --accent-2: #7b3eff;
+      --accent-3: #ffb347;
+      --surface: rgba(10, 12, 25, 0.90);
+      --border-soft: rgba(148, 163, 184, 0.3);
+      --text-main: #f9fafb;
+      --text-muted: #94a3b8;
+      --radius-xl: 999px;
+      --radius-lg: 24px;
+      --shadow-soft: 0 24px 60px rgba(0,0,0,0.45);
+      --hero-bg-1: url("images/hero-1.jpg");
+      --hero-bg-2: url("images/hero-2.jpg");
+      --hero-bg-3: url("images/hero-3.jpg");
+      --hero-bg-4: url("images/hero-4.jpg");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px circle at 0% 0%, #3b82f6 0, transparent 55%),
+        radial-gradient(1200px circle at 100% 100%, #ec4899 0, transparent 55%),
+        #020617;
+      color: var(--text-main);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1360px;
+      margin: 16px;
+      border-radius: 32px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(26px);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      min-height: calc(100vh - 32px);
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      position: relative;
+      padding: 18px 16px 16px;
+      background:
+        radial-gradient(circle at 0 0, rgba(148,163,255,0.3), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(244,114,182,0.3), transparent 60%),
+        linear-gradient(145deg, rgba(15,23,42,0.98), rgba(15,23,42,0.98));
+      border-right: 1px solid rgba(51,65,85,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: conic-gradient(from 210deg, var(--accent-1), var(--accent-2), #22d3ee, var(--accent-1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(248,113,113,0.6);
+    }
+
+    .sidebar-logo span {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .sidebar-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(120deg, #f97316, #ec4899, #6366f1);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .sidebar-subtitle {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-nav {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    .nav-section-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      margin: 8px 4px 4px;
+    }
+
+    .nav-item {
+      border-radius: 999px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: background 0.18s ease-out, border 0.18s ease-out, transform 0.18s ease-out;
+    }
+
+    .nav-item span.icon {
+      font-size: 16px;
+    }
+
+    .nav-item.active {
+      background: radial-gradient(circle at 0 0, rgba(148,163,255,0.28), transparent 70%);
+      border-color: rgba(148,163,184,0.9);
+      transform: translateY(-1px);
+    }
+
+    .nav-item:hover {
+      background: rgba(15,23,42,0.9);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .badge-pill {
+      align-self: flex-start;
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .badge-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    /* MAIN PANEL */
+
+    .main-panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background:
+        radial-gradient(150% 200% at 0% 0%, rgba(59,130,246,0.15), transparent 60%),
+        radial-gradient(160% 220% at 100% 100%, rgba(236,72,153,0.16), transparent 60%),
+        #020617;
+    }
+
+    .main-header {
+      padding: 14px 22px 10px;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .main-header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .main-header-title h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .main-header-title span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .main-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      border-radius: var(--radius-xl);
+      border: none;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      box-shadow: 0 14px 30px rgba(248,113,113,0.55);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, filter 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      box-shadow: 0 18px 44px rgba(248,113,113,0.7);
+    }
+
+    .btn-secondary {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 7px 12px;
+      background: rgba(15,23,42,0.9);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,1);
+    }
+
+    .btn-icon-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 16px 22px 18px;
+      overflow: auto;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 220ms ease-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .content-shell {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .section-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .section-body {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag-pill {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-muted);
+    }
+
+    .link-inline {
+      border: none;
+      background: none;
+      padding: 0;
+      font-size: 11px;
+      color: var(--accent-3);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+
+    /* DISCOVERY */
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .summary-card {
+      border-radius: 18px;
+      padding: 8px 10px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background:
+        radial-gradient(circle at 0 0, rgba(148,163,255,0.25), transparent 60%),
+        rgba(15,23,42,0.98);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 11px;
+    }
+
+    .summary-label {
+      color: rgba(148,163,184,0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 9px;
+    }
+
+    .summary-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .summary-note {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .discovery-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+    }
+
+    .discovery-card {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 26px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(148,163,184,0.5);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.65);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .discovery-photo-block {
+      padding: 8px 8px 0;
+    }
+
+    .discovery-photo-main {
+      position: relative;
+      height: 300px;
+      border-radius: 20px;
+      overflow: hidden;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.25)),
+        var(--hero-bg-1) center/cover no-repeat;
+    }
+
+    .discovery-photo-main.photo-1 {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.25)),
+        var(--hero-bg-1) center/cover no-repeat;
+    }
+
+    .discovery-photo-main.photo-2 {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.25)),
+        var(--hero-bg-2) center/cover no-repeat;
+    }
+
+    .discovery-photo-main.photo-3 {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.25)),
+        var(--hero-bg-3) center/cover no-repeat;
+    }
+
+    .discovery-photo-main.photo-4 {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.25)),
+        var(--hero-bg-4) center/cover no-repeat;
+    }
+
+    .discovery-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(150% 200% at 0% 100%, rgba(59,130,246,0.35), transparent 60%),
+        radial-gradient(150% 200% at 100% 0%, rgba(236,72,153,0.35), transparent 60%);
+      mix-blend-mode: soft-light;
+    }
+
+    .discovery-photo-meta {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 12px;
+    }
+
+    .photo-pill {
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(148,163,184,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .photo-counter {
+      font-size: 11px;
+      color: rgba(226,232,240,0.9);
+    }
+
+    .discovery-photo-thumbs {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+      padding: 0 2px 4px;
+    }
+
+    .thumb-pill {
+      flex: 1;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.85), rgba(15,23,42,0.0)),
+        var(--hero-bg-1) center/cover no-repeat;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: border 0.18s ease-out, transform 0.18s ease-out, box-shadow 0.18s ease-out, opacity 0.18s;
+      opacity: 0.9;
+    }
+
+    .thumb-pill[data-photo="1"] {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.85), rgba(15,23,42,0.0)),
+        var(--hero-bg-1) center/cover no-repeat;
+    }
+
+    .thumb-pill[data-photo="2"] {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.85), rgba(15,23,42,0.0)),
+        var(--hero-bg-2) center/cover no-repeat;
+    }
+
+    .thumb-pill[data-photo="3"] {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.85), rgba(15,23,42,0.0)),
+        var(--hero-bg-3) center/cover no-repeat;
+    }
+
+    .thumb-pill[data-photo="4"] {
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.85), rgba(15,23,42,0.0)),
+        var(--hero-bg-4) center/cover no-repeat;
+    }
+
+    .thumb-pill.active {
+      border-color: rgba(248,113,113,0.9);
+      box-shadow: 0 12px 30px rgba(248,113,113,0.6);
+      transform: translateY(-1px);
+      opacity: 1;
+    }
+
+    .thumb-pill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(15,23,42,0.7), transparent);
+      opacity: 0.5;
+    }
+
+    .discovery-body {
+      padding: 10px 12px 8px;
+    }
+
+    .profile-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .profile-name-age {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .profile-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .bio-block {
+      font-size: 12px;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .bio-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148,163,184,0.9);
+      margin-bottom: 2px;
+    }
+
+    .discovery-footer {
+      padding: 8px 12px 10px;
+      border-top: 1px solid rgba(30,41,59,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .discovery-actions-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .swipe-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.96);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border 0.18s ease-out;
+    }
+
+    .swipe-btn.big {
+      width: 64px;
+      height: 64px;
+      font-size: 22px;
+    }
+
+    .swipe-btn.like {
+      border-color: rgba(45,212,191,0.9);
+    }
+
+    .swipe-btn.super {
+      border-color: rgba(129,140,248,0.9);
+    }
+
+    .swipe-btn.dislike {
+      border-color: rgba(239,68,68,0.9);
+    }
+
+    .swipe-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.7);
+    }
+
+    .discovery-actions-secondary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* BROWSE PROFILES */
+
+    .grid-profiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .profile-card {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.95);
+      cursor: pointer;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border 0.18s ease-out;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+      border-color: rgba(148,163,184,0.9);
+    }
+
+    .profile-card-photo {
+      height: 160px;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.25)),
+        var(--hero-bg-2) center/cover no-repeat;
+    }
+
+    .profile-card-body {
+      padding: 6px 8px 8px;
+      font-size: 12px;
+    }
+
+    .profile-card-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .profile-card-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .profile-card-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .profile-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      font-size: 10px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+
+    /* WHO LIKED YOU */
+
+    .like-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .like-section-card {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.45);
+      background: rgba(15,23,42,0.96);
+      padding: 12px 12px 10px;
+    }
+
+    .like-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .like-badge {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(129,140,248,0.9);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .likes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .like-item {
+      position: relative;
+      height: 120px;
+      border-radius: 14px;
+      overflow: hidden;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.25)),
+        var(--hero-bg-3) center/cover no-repeat;
+      border: 1px solid rgba(51,65,85,0.9);
+    }
+
+    .like-item-label {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      right: 4px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      color: #e5e7eb;
+      text-shadow: 0 0 8px rgba(15,23,42,0.9);
+    }
+
+    .like-paywall {
+      position: relative;
+      margin-top: 0;
+    }
+
+    .paywall-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(148,163,255,0.45), rgba(15,23,42,0.96));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .paywall-overlay h3 {
+      font-size: 14px;
+    }
+
+    .paywall-overlay p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .paywall-lock {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* MY PROFILE */
+
+    .profile-page {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .profile-hero {
+      border-radius: 22px;
+      padding: 12px 12px 10px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background:
+        radial-gradient(circle at 0 0, rgba(148,163,255,0.32), transparent 60%),
+        rgba(15,23,42,0.98);
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .profile-avatar-lg {
+      width: 64px;
+      height: 64px;
+      border-radius: 22px;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.3)),
+        var(--hero-bg-1) center/cover no-repeat;
+      border: 1px solid rgba(148,163,184,0.9);
+    }
+
+    .profile-hero-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .profile-hero-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .profile-hero-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .profile-hero-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge-verify {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(52,211,153,0.9);
+      background: rgba(15,23,42,0.95);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .profile-hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .chip-sm {
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 10px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.96);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .profile-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .stat-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.97);
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .stat-label {
+      color: rgba(148,163,184,0.9);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .stat-note {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .profile-tabs {
+      margin-top: 4px;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .profile-tab-btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 6px 10px;
+      font-size: 11px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .profile-tab-btn.active {
+      border-color: rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+    }
+
+    .profile-tabs-spacer {
+      flex: 1;
+    }
+
+    .profile-tab-panels {
+      margin-top: 8px;
+    }
+
+    .profile-tab-panel {
+      display: none;
+      animation: fadeIn 200ms ease-out;
+    }
+
+    .profile-tab-panel.active {
+      display: block;
+    }
+
+    .section-small-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148,163,184,0.9);
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+
+    .row-action {
+      border-radius: 14px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.98);
+      padding: 8px 9px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .row-action-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .row-action-title {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .row-action-note {
+      color: var(--text-muted);
+    }
+
+    .prompt-preview {
+      border-radius: 12px;
+      border: 1px solid rgba(51,65,85,0.9);
+      padding: 8px;
+      font-size: 11px;
+      margin-bottom: 6px;
+      background: rgba(15,23,42,0.98);
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .photo-tile {
+      position: relative;
+      padding-top: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(51,65,85,0.9);
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.3)),
+        var(--hero-bg-2) center/cover no-repeat;
+    }
+
+    .photo-tile-label {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      right: 4px;
+      font-size: 10px;
+      text-align: left;
+      color: #e5e7eb;
+      text-shadow: 0 0 6px rgba(15,23,42,0.9);
+    }
+
+    /* SUBSCRIPTIONS / CREDITS / UPGRADES */
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .plan-card {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.55);
+      background: rgba(15,23,42,0.96);
+      padding: 12px 12px 10px;
+      position: relative;
+    }
+
+    .plan-pill {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.96);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .plan-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .plan-price {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .plan-details {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .plan-list {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .plan-list li {
+      margin-left: 16px;
+      margin-bottom: 2px;
+    }
+
+    /* MESSAGES (unchanged structurally from previous, just kept styling) */
+
+    .message-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+      gap: 16px;
+      height: calc(100vh - 150px);
+      max-height: 540px;
+      margin-top: 8px;
+    }
+
+    .conv-list {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.98);
+      padding: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .conv-scroll {
+      margin-top: 6px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .conv-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.18s ease-out;
+    }
+
+    .conv-item:hover {
+      background: rgba(15,23,42,0.92);
+    }
+
+    .conv-item.active {
+      background: radial-gradient(circle at 0 0, rgba(148,163,255,0.3), transparent 60%);
+    }
+
+    .conv-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.3)),
+        var(--hero-bg-4) center/cover no-repeat;
+      border: 1px solid rgba(148,163,184,0.8);
+    }
+
+    .conv-meta {
+      display: flex;
+      flex-direction: column;
+      font-size: 11px;
+    }
+
+    .conv-name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .conv-last {
+      color: var(--text-muted);
+    }
+
+    .chat-panel {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.98);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-target {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .chat-status {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .chat-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chat-call-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.96);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 8px 2px 6px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+
+    .chat-row {
+      display: flex;
+      margin-bottom: 6px;
+    }
+
+    .chat-row.me {
+      justify-content: flex-end;
+    }
+
+    .chat-bubble {
+      max-width: 74%;
+      padding: 7px 10px;
+      border-radius: 14px;
+      background: rgba(30,64,175,0.9);
+      color: #e5e7eb;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.8);
+    }
+
+    .chat-row.them .chat-bubble {
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(51,65,85,0.9);
+    }
+
+    .chat-meta-line {
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .chat-input-row {
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(30,41,59,0.9);
+    }
+
+    .chat-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      padding: 7px 10px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .chat-send-btn {
+      border-radius: 999px;
+      padding: 7px 12px;
+      border: none;
+      background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* MODALS */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .overlay.active { display: flex; }
+
+    .overlay-card {
+      max-width: 520px;
+      width: 100%;
+      background: rgba(15,23,42,0.98);
+      border-radius: 24px;
+      padding: 16px 14px 12px;
+      border: 1px solid rgba(148,163,184,0.55);
+      color: var(--text-main);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.75);
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .overlay-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      cursor: pointer;
+      font-size: 18px;
+      color: rgba(148,163,184,0.85);
+    }
+
+    .overlay-close:hover {
+      color: #e5e7eb;
+    }
+
+    /* MOBILE NAV */
+
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .app-shell {
+        grid-template-columns: minmax(0, 1fr);
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main-header {
+        padding: 10px 14px 8px;
+      }
+
+      .main-content {
+        padding: 12px 12px 72px;
+      }
+
+      .mobile-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: rgba(15,23,42,0.98);
+        border-top: 1px solid rgba(30,41,59,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 30;
+      }
+
+      .mobile-nav-item {
+        flex: 1;
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        cursor: pointer;
+      }
+
+      .mobile-nav-item span.icon {
+        font-size: 18px;
+      }
+
+      .mobile-nav-item.active {
+        color: #f9fafb;
+      }
+
+      .message-layout {
+        grid-template-columns: minmax(0, 1fr);
+        height: auto;
+        max-height: none;
+      }
+
+      .conv-list {
+        display: none;
+      }
+
+      .profile-hero {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto auto;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR (desktop) -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-brand">
+        <div class="sidebar-logo"><span>❤</span></div>
+        <div class="sidebar-text">
+          <div class="sidebar-title">BingeDate</div>
+          <div class="sidebar-subtitle">Dashboard</div>
+        </div>
+      </div>
+      <div class="badge-pill">
+        <span class="badge-pill-dot"></span>
+        Online · Preview
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Discover</div>
+      <div class="nav-item active" data-page="discovery">
+        <span class="icon">🔥</span> <span>Discovery</span>
+      </div>
+      <div class="nav-item" data-page="browse">
+        <span class="icon">👀</span> <span>Browse profiles</span>
+      </div>
+      <div class="nav-item" data-page="likes">
+        <span class="icon">💌</span> <span>Who liked you</span>
+      </div>
+
+      <div class="nav-section-label">You</div>
+      <div class="nav-item" data-page="profile">
+        <span class="icon">🙋‍♂️</span> <span>My profile</span>
+      </div>
+
+      <div class="nav-section-label">Upgrades</div>
+      <div class="nav-item" data-page="subscription">
+        <span class="icon">⭐</span> <span>Subscriptions</span>
+      </div>
+      <div class="nav-item" data-page="credits">
+        <span class="icon">🎁</span> <span>Credits / Showcase</span>
+      </div>
+      <div class="nav-item" data-page="upgrades">
+        <span class="icon">💳</span> <span>Plan overview</span>
+      </div>
+
+      <div class="nav-section-label">Chat</div>
+      <div class="nav-item" data-page="messages">
+        <span class="icon">💬</span> <span>Messages</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span>Prototype UI only. No real users yet.</span>
+      <span>Built to work on mobile, web & Electron.</span>
+    </div>
+  </aside>
+
+  <!-- MAIN PANEL -->
+  <section class="main-panel">
+    <header class="main-header">
+      <div class="main-header-title">
+        <h1 id="headerTitle">Discovery</h1>
+        <span id="headerSubtitle">Swipe through curated profiles one at a time.</span>
+      </div>
+      <div class="main-header-actions">
+        <button class="btn-secondary" id="filterBtn">
+          <span>⚙</span> Filters
+        </button>
+        <button class="btn-icon-circle">🔔</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="content-shell">
+
+        <!-- DISCOVERY PAGE -->
+        <section class="page active" id="page-discovery">
+          <div class="summary-strip">
+            <div class="summary-card">
+              <div class="summary-label">Likes today</div>
+              <div class="summary-value">7</div>
+              <div class="summary-note">People who liked you in the last 24 hours.</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">New matches</div>
+              <div class="summary-value">2</div>
+              <div class="summary-note">Start a chat before the vibe cools down.</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">Boosts & super likes</div>
+              <div class="summary-note">2 boosts · 5 super likes left</div>
+            </div>
+          </div>
+
+          <div class="discovery-layout">
+            <div class="discovery-card">
+              <div class="discovery-photo-block">
+                <div class="discovery-photo-main photo-1" id="discoveryPhotoMain">
+                  <div class="discovery-photo-overlay"></div>
+                  <div class="discovery-photo-meta">
+                    <div class="photo-pill">
+                      <span style="font-size:10px;">Sample preview</span>
+                    </div>
+                    <div class="photo-pill">
+                      <span class="photo-counter" id="photoCounter">1 / 4</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="discovery-photo-thumbs" id="photoThumbs">
+                  <div class="thumb-pill active" data-photo="1"></div>
+                  <div class="thumb-pill" data-photo="2"></div>
+                  <div class="thumb-pill" data-photo="3"></div>
+                  <div class="thumb-pill" data-photo="4"></div>
+                </div>
+              </div>
+
+              <div class="discovery-body">
+                <div class="profile-line">
+                  <div class="profile-name-age">Alex, 28 · They/Them</div>
+                  <div class="profile-meta">Online now · 3 km away</div>
+                </div>
+                <div class="profile-meta">
+                  Product Designer at Swiggy · B.Des, NID
+                </div>
+                <div class="tag-row" style="margin:6px 0;">
+                  <span class="tag-pill">🍸 Drinks socially</span>
+                  <span class="tag-pill">🚭 Non-smoker</span>
+                  <span class="tag-pill">🌈 Pansexual</span>
+                </div>
+                <div class="bio-block">
+                  <div class="bio-label">Prompt</div>
+                  <div>“My ideal first date: street food crawl + arguing about which chutney is superior.”</div>
+                </div>
+                <div class="tag-row">
+                  <span class="tag-pill">🎮 Cozy co-op games</span>
+                  <span class="tag-pill">📚 Slow reader</span>
+                  <span class="tag-pill">✈ Weekend trips</span>
+                  <span class="tag-pill">🏙 Lives in Indiranagar</span>
+                </div>
+              </div>
+              <div class="discovery-footer">
+                <div class="discovery-actions-main">
+                  <button class="swipe-btn dislike" title="Nope">✖</button>
+                  <button class="swipe-btn big like" title="Like">❤</button>
+                  <button class="swipe-btn super" title="Super like">⭐</button>
+                  <button class="swipe-btn" title="Message now">💬</button>
+                </div>
+                <div class="discovery-actions-secondary">
+                  <span>Tap photos or scroll down to see more about them.</span>
+                  <button class="link-inline" id="openFilterInline">Refine matches</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- BROWSE PROFILES PAGE -->
+        <section class="page" id="page-browse">
+          <div class="section-head">
+            <div class="section-title">Browse profiles</div>
+            <div class="section-helper">Tap any card to open the full profile</div>
+          </div>
+          <div class="section-body">
+            Great for when you want to skim a bunch of faces and then deep-dive into the ones that stand out.
+          </div>
+          <div class="grid-profiles" id="browseGrid">
+            <div class="profile-card" data-profile="1">
+              <div class="profile-badge">New</div>
+              <div class="profile-card-photo"></div>
+              <div class="profile-card-body">
+                <div class="profile-card-line">
+                  <span class="profile-card-name">Meera, 27</span>
+                  <span class="profile-card-meta">3 km</span>
+                </div>
+                <div class="profile-card-meta">Engineer · Bengaluru</div>
+              </div>
+            </div>
+            <div class="profile-card" data-profile="2">
+              <div class="profile-badge">Online</div>
+              <div class="profile-card-photo"></div>
+              <div class="profile-card-body">
+                <div class="profile-card-line">
+                  <span class="profile-card-name">Rohan, 30</span>
+                  <span class="profile-card-meta">5 km</span>
+                </div>
+                <div class="profile-card-meta">PM · Remote</div>
+              </div>
+            </div>
+            <div class="profile-card" data-profile="3">
+              <div class="profile-badge">Super liked you</div>
+              <div class="profile-card-photo"></div>
+              <div class="profile-card-body">
+                <div class="profile-card-line">
+                  <span class="profile-card-name">Priya, 26</span>
+                  <span class="profile-card-meta">1 km</span>
+                </div>
+                <div class="profile-card-meta">Designer · Bengaluru</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- WHO LIKED YOU PAGE -->
+        <section class="page" id="page-likes">
+          <div class="section-head">
+            <div class="section-title">Who liked you</div>
+            <div class="section-helper">Super likes first · Likes behind a soft paywall</div>
+          </div>
+          <div class="section-body">
+            Use this space when you don’t feel like swiping. Everyone here has already said yes.
+          </div>
+
+          <div class="like-layout">
+            <div class="like-section-card">
+              <div class="like-section-head">
+                <span>Super likes</span>
+                <span class="like-badge">High intent</span>
+              </div>
+              <div class="section-body">
+                People who really want to get your attention. These are usually worth checking out first.
+              </div>
+              <div class="likes-grid">
+                <div class="like-item">
+                  <div class="like-item-label">
+                    <span>“Top pick”</span><span>⭐</span>
+                  </div>
+                </div>
+                <div class="like-item">
+                  <div class="like-item-label">
+                    <span>“Big fan”</span><span>⭐</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="like-section-card like-paywall">
+              <div class="like-section-head">
+                <span>Likes</span>
+                <span style="font-size:11px;color:var(--text-muted);">Blurred preview</span>
+              </div>
+              <div class="section-body">
+                We’ll show blurred tiles so you can see that there’s activity, without revealing faces until you upgrade.
+              </div>
+              <div class="likes-grid" style="filter: grayscale(1) blur(4px); opacity:0.7;">
+                <div class="like-item"></div>
+                <div class="like-item"></div>
+                <div class="like-item"></div>
+                <div class="like-item"></div>
+              </div>
+              <div class="paywall-overlay">
+                <div class="paywall-lock">🔒</div>
+                <h3>Unlock your likes</h3>
+                <p>Upgrade to instantly see everyone who liked you, plus an easy filter for super likes.</p>
+                <button class="btn-primary" data-page-jump="subscription">
+                  See plans
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MY PROFILE PAGE (TABBED) -->
+        <section class="page" id="page-profile">
+          <div class="section-head">
+            <div class="section-title">My profile</div>
+            <div class="section-helper">Everything about how you look on BingeDate</div>
+          </div>
+
+          <div class="profile-page">
+            <!-- Hero -->
+            <div class="profile-hero">
+              <div class="profile-avatar-lg"></div>
+              <div class="profile-hero-main">
+                <div class="profile-hero-line">
+                  <div>
+                    <div class="profile-hero-name">Sam, 29</div>
+                    <div class="profile-hero-meta">Product · Bengaluru · 3 km</div>
+                  </div>
+                  <button class="badge-verify" id="verifyBtn">
+                    ✅ Verify face
+                  </button>
+                </div>
+                <div class="tag-row" style="margin-top:4px;">
+                  <span class="tag-pill">Shows: Women, Non-binary</span>
+                  <span class="tag-pill">Looking for: Long-term</span>
+                </div>
+              </div>
+              <div class="profile-hero-actions">
+                <button class="btn-secondary">👁 View profile</button>
+                <button class="btn-primary">🖼 Edit photos</button>
+              </div>
+            </div>
+
+            <!-- Boosts / Superlikes / Summary -->
+            <div class="profile-stats-row">
+              <div class="stat-card">
+                <div class="stat-label">Boosts</div>
+                <div class="stat-value">2</div>
+                <div class="stat-note">Use a boost to be seen by more people for 30 minutes.</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Super likes</div>
+                <div class="stat-value">5</div>
+                <div class="stat-note">Great for “I really want you to notice this”.</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Profile completeness</div>
+                <div class="stat-value">80%</div>
+                <div class="stat-note">Finish prompts & photos to get better matches.</div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="profile-tabs">
+              <button class="profile-tab-btn active" data-tab="overview">Overview</button>
+              <button class="profile-tab-btn" data-tab="prompts">Prompts & bio</button>
+              <button class="profile-tab-btn" data-tab="interests">Interests & preferences</button>
+              <button class="profile-tab-btn" data-tab="photos">Photos</button>
+              <button class="profile-tab-btn" data-tab="account">Account</button>
+              <div class="profile-tabs-spacer"></div>
+            </div>
+
+            <div class="profile-tab-panels">
+              <!-- OVERVIEW TAB -->
+              <div class="profile-tab-panel active" data-tab-panel="overview">
+                <div class="section-small-title">Quick actions</div>
+
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Edit photos</div>
+                    <div class="row-action-note">Change your main profile picture and photo order.</div>
+                  </div>
+                  <button class="btn-secondary">Manage photos</button>
+                </div>
+
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Edit prompts</div>
+                    <div class="row-action-note">Tweak your answers or add a new one to show more personality.</div>
+                  </div>
+                  <button class="btn-secondary" data-tab-jump="prompts">Open prompts</button>
+                </div>
+
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Edit bio</div>
+                    <div class="row-action-note">Short description that appears near the top of your profile.</div>
+                  </div>
+                  <button class="btn-secondary" data-tab-jump="prompts">Edit bio</button>
+                </div>
+
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Edit interests</div>
+                    <div class="row-action-note">Update the topics and hobbies that help us match you.</div>
+                  </div>
+                  <button class="btn-secondary" data-tab-jump="interests">Interests</button>
+                </div>
+
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Edit preferences</div>
+                    <div class="row-action-note">Who you see, age range, distance, lifestyle filters, and more.</div>
+                  </div>
+                  <button class="btn-secondary" data-tab-jump="interests">Preferences</button>
+                </div>
+
+                <div class="section-small-title">Account</div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Account settings</div>
+                    <div class="row-action-note">Email, phone, login security, and delete/deactivate controls.</div>
+                  </div>
+                  <button class="btn-secondary" data-tab-jump="account">Open account</button>
+                </div>
+              </div>
+
+              <!-- PROMPTS & BIO TAB -->
+              <div class="profile-tab-panel" data-tab-panel="prompts">
+                <div class="section-small-title">Bio</div>
+                <div class="prompt-preview">
+                  <strong>Short bio</strong><br>
+                  Coffee, code, and badly timed jokes. Looking for someone I can send memes and playlists to.
+                </div>
+                <button class="btn-secondary" style="margin-bottom:8px;">✏ Edit bio</button>
+
+                <div class="section-small-title">Prompts</div>
+                <div class="prompt-preview">
+                  <strong>My perfect first date...</strong><br>
+                  Walking, food, and enough time to laugh at at least one bad joke.
+                </div>
+                <div class="prompt-preview">
+                  <strong>A non-negotiable for me is...</strong><br>
+                  Being kind to service staff.
+                </div>
+                <button class="btn-secondary" style="margin-top:4px;">✏ Edit prompts</button>
+                <button class="btn-secondary" style="margin-top:4px;">➕ Add another prompt</button>
+              </div>
+
+              <!-- INTERESTS & PREFERENCES TAB -->
+              <div class="profile-tab-panel" data-tab-panel="interests">
+                <div class="section-small-title">Interests</div>
+                <div class="tag-row" style="margin-bottom:6px;">
+                  <span class="tag-pill">🎧 Live music</span>
+                  <span class="tag-pill">🍜 Noodle person</span>
+                  <span class="tag-pill">🎮 Co-op games</span>
+                  <span class="tag-pill">🚶‍♂️ Evening walks</span>
+                  <span class="tag-pill">📚 Non-fiction</span>
+                </div>
+                <button class="btn-secondary" style="margin-bottom:8px;">✏ Edit interests</button>
+
+                <div class="section-small-title">Preferences</div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Who you see</div>
+                    <div class="row-action-note">Women, Non-binary · 24–34 years · Up to 15 km away.</div>
+                  </div>
+                  <button class="btn-secondary">Edit</button>
+                </div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Lifestyle filters</div>
+                    <div class="row-action-note">Smoking, drinking, pets, and other day-to-day stuff.</div>
+                  </div>
+                  <button class="btn-secondary">Edit</button>
+                </div>
+              </div>
+
+              <!-- PHOTOS TAB -->
+              <div class="profile-tab-panel" data-tab-panel="photos">
+                <div class="section-small-title">Photos</div>
+                <div class="photos-grid">
+                  <div class="photo-tile">
+                    <div class="photo-tile-label">Cover photo</div>
+                  </div>
+                  <div class="photo-tile">
+                    <div class="photo-tile-label">Full body</div>
+                  </div>
+                  <div class="photo-tile">
+                    <div class="photo-tile-label">With friends</div>
+                  </div>
+                  <div class="photo-tile">
+                    <div class="photo-tile-label">Hobby</div>
+                  </div>
+                  <div class="photo-tile">
+                    <div class="photo-tile-label">Travel</div>
+                  </div>
+                  <div class="photo-tile">
+                    <div class="photo-tile-label">Extra</div>
+                  </div>
+                </div>
+                <button class="btn-primary" style="margin-top:8px;">🖼 Edit photos</button>
+              </div>
+
+              <!-- ACCOUNT TAB -->
+              <div class="profile-tab-panel" data-tab-panel="account">
+                <div class="section-small-title">Login & security</div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Email</div>
+                    <div class="row-action-note">sam@example.com</div>
+                  </div>
+                  <button class="btn-secondary">Change</button>
+                </div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Phone</div>
+                    <div class="row-action-note">+91 •••• ••1234</div>
+                  </div>
+                  <button class="btn-secondary">Change</button>
+                </div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Password & devices</div>
+                    <div class="row-action-note">Manage login methods and signed-in devices.</div>
+                  </div>
+                  <button class="btn-secondary">Manage</button>
+                </div>
+
+                <div class="section-small-title">Danger zone</div>
+                <div class="row-action">
+                  <div class="row-action-left">
+                    <div class="row-action-title">Pause or delete account</div>
+                    <div class="row-action-note">You can always come back later. We’ll explain options before anything is permanent.</div>
+                  </div>
+                  <button class="btn-secondary">Review options</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SUBSCRIPTION PAGE -->
+        <section class="page" id="page-subscription">
+          <div class="section-head">
+            <div class="section-title">Subscriptions</div>
+            <div class="section-helper">Upgrade how you match</div>
+          </div>
+          <div class="section-body">
+            Keep it free, go Plus for “see who liked you”, or go Pro when you’re in serious dating mode.
+          </div>
+          <div class="plans-grid">
+            <div class="plan-card">
+              <div class="plan-pill">Current plan</div>
+              <div class="plan-title">Free</div>
+              <div class="plan-price">₹0</div>
+              <div class="plan-details">
+                Great to try things out. Basic swipes, limited likes, and discovery mode.
+              </div>
+              <ul class="plan-list">
+                <li>Daily like limit</li>
+                <li>Basic filters</li>
+                <li>Standard queue</li>
+              </ul>
+              <button class="btn-secondary">You’re here</button>
+            </div>
+
+            <div class="plan-card">
+              <div class="plan-pill">Most popular</div>
+              <div class="plan-title">BingeDate Plus</div>
+              <div class="plan-price">₹699<span style="font-size:11px;">/month</span></div>
+              <div class="plan-details">
+                Remove limits, see who liked you, and get better filters.
+              </div>
+              <ul class="plan-list">
+                <li>Unlimited likes</li>
+                <li>See who liked you</li>
+                <li>Advanced filters (lifestyle, habits, etc.)</li>
+              </ul>
+              <button class="btn-primary">Upgrade to Plus</button>
+            </div>
+
+            <div class="plan-card">
+              <div class="plan-pill">Serious mode</div>
+              <div class="plan-title">BingeDate Pro</div>
+              <div class="plan-price">₹1,199<span style="font-size:11px;">/month</span></div>
+              <div class="plan-details">
+                Everything in Plus, plus premium placement and incognito controls.
+              </div>
+              <ul class="plan-list">
+                <li>Top of the deck placement</li>
+                <li>Incognito preview</li>
+                <li>Monthly super likes & boosts</li>
+              </ul>
+              <button class="btn-primary">Upgrade to Pro</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- CREDITS / SHOWCASE PAGE -->
+        <section class="page" id="page-credits">
+          <div class="section-head">
+            <div class="section-title">Credits & gifts</div>
+            <div class="section-helper">Use credits to stand out</div>
+          </div>
+          <div class="section-body">
+            Super likes and gifts are your “hey, I really mean it” tools. Credits let you use them without changing plans.
+          </div>
+          <div class="plans-grid">
+            <div class="plan-card">
+              <div class="plan-pill">Credits balance</div>
+              <div class="plan-price">120<span style="font-size:11px;"> credits</span></div>
+              <div class="plan-details">
+                Credits let you send gifts, super likes, and boosts without changing your subscription.
+              </div>
+              <ul class="plan-list">
+                <li>Super like = 5 credits</li>
+                <li>Boost = 20 credits</li>
+                <li>Virtual gifts = 1–10 credits</li>
+              </ul>
+              <button class="btn-primary">Buy more credits</button>
+            </div>
+
+            <div class="plan-card">
+              <div class="plan-pill">Gift ideas</div>
+              <div class="plan-title">Showcase</div>
+              <div class="plan-details">
+                In the live app, this section would show themed gifts, stickers, and limited edition items.
+              </div>
+              <ul class="plan-list">
+                <li>“Coffee on me” gift</li>
+                <li>“Movie night” gift</li>
+                <li>“Congrats!” celebration pack</li>
+              </ul>
+              <button class="btn-secondary">Preview gifts</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- PLAN OVERVIEW PAGE -->
+        <section class="page" id="page-upgrades">
+          <div class="section-head">
+            <div class="section-title">Plan overview</div>
+            <div class="section-helper">Subscriptions + credits in one place</div>
+          </div>
+          <div class="section-body">
+            A quick summary of your plan, renewal date, and credit balance, so you don’t need to hunt through menus.
+          </div>
+          <div class="plans-grid">
+            <div class="plan-card">
+              <div class="plan-pill">Your subscription</div>
+              <div class="plan-title">Free (preview)</div>
+              <div class="plan-details">
+                In production, this card would show your actual plan, renewal date, and quick actions.
+              </div>
+              <button class="btn-primary" data-page-jump="subscription">
+                Manage subscription
+              </button>
+            </div>
+            <div class="plan-card">
+              <div class="plan-pill">Your credits</div>
+              <div class="plan-title">120 credits</div>
+              <div class="plan-details">
+                Summary of your current balance and recent credit usage.
+              </div>
+              <button class="btn-secondary" data-page-jump="credits">
+                Buy or view history
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- MESSAGES PAGE -->
+        <section class="page" id="page-messages">
+          <div class="section-head">
+            <div class="section-title">Messages</div>
+            <div class="section-helper">Two-way chat with audio & video</div>
+          </div>
+
+          <div class="message-layout">
+            <div class="conv-list">
+              <div class="section-head">
+                <span class="section-title">Chats</span>
+                <span class="section-helper">Recent conversations</span>
+              </div>
+              <div class="conv-scroll">
+                <div class="conv-item active" data-conv="alex">
+                  <div class="conv-avatar"></div>
+                  <div class="conv-meta">
+                    <span class="conv-name">Alex</span>
+                    <span class="conv-last">“Street food crawl?”</span>
+                  </div>
+                </div>
+                <div class="conv-item" data-conv="meera">
+                  <div class="conv-avatar"></div>
+                  <div class="conv-meta">
+                    <span class="conv-name">Meera</span>
+                    <span class="conv-last">“Send me that playlist!”</span>
+                  </div>
+                </div>
+                <div class="conv-item" data-conv="rohan">
+                  <div class="conv-avatar"></div>
+                  <div class="conv-meta">
+                    <span class="conv-name">Rohan</span>
+                    <span class="conv-last">Typing…</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-panel">
+              <div class="chat-header">
+                <div class="chat-header-left">
+                  <div class="conv-avatar"></div>
+                  <div>
+                    <div class="chat-target" id="chatTarget">Alex</div>
+                    <div class="chat-status">Online · Last seen just now</div>
+                  </div>
+                </div>
+                <div class="chat-header-actions">
+                  <button class="chat-call-btn" title="Audio call">📞</button>
+                  <button class="chat-call-btn" title="Video call">🎥</button>
+                </div>
+              </div>
+              <div class="chat-body" id="chatBody">
+                <div class="chat-row them">
+                  <div class="chat-bubble">
+                    Hey! That food crawl idea in your prompt sounded fun.
+                    <div class="chat-meta-line">Alex · 7:42 pm</div>
+                  </div>
+                </div>
+                <div class="chat-row me">
+                  <div class="chat-bubble">
+                    Haha, yes. Are you more dosa or chaat person?
+                    <div class="chat-meta-line">You · 7:43 pm</div>
+                  </div>
+                </div>
+                <div class="chat-row them">
+                  <div class="chat-bubble">
+                    100% chaat. But I’ll never say no to a good dosa.
+                    <div class="chat-meta-line">Alex · 7:44 pm</div>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-input-row">
+                <input id="chatInput" class="chat-input" placeholder="Type a message…" />
+                <button class="chat-send-btn" id="chatSendBtn">
+                  Send <span>➤</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- MOBILE NAV -->
+    <nav class="mobile-nav" id="mobileNav">
+      <div class="mobile-nav-item active" data-page="discovery">
+        <span class="icon">🔥</span><span>Discover</span>
+      </div>
+      <div class="mobile-nav-item" data-page="browse">
+        <span class="icon">👀</span><span>Browse</span>
+      </div>
+      <div class="mobile-nav-item" data-page="likes">
+        <span class="icon">💌</span><span>Likes</span>
+      </div>
+      <div class="mobile-nav-item" data-page="messages">
+        <span class="icon">💬</span><span>Chat</span>
+      </div>
+      <div class="mobile-nav-item" data-page="profile">
+        <span class="icon">🙋‍♂️</span><span>Me</span>
+      </div>
+    </nav>
+  </section>
+</div>
+
+<!-- MODAL: PROFILE DETAIL (BROWSE) -->
+<div class="overlay" id="profileModal">
+  <div class="overlay-card">
+    <div class="overlay-close" data-close-overlay>&times;</div>
+    <div class="discovery-card" style="box-shadow:none;border-radius:18px;">
+      <div class="discovery-photo-block">
+        <div class="discovery-photo-main photo-2">
+          <div class="discovery-photo-overlay"></div>
+          <div class="discovery-photo-meta">
+            <div class="photo-pill">
+              <span style="font-size:10px;">Sample profile</span>
+            </div>
+            <div class="photo-pill">
+              <span style="font-size:10px;">Tap gift / call / message</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="discovery-body">
+        <div class="profile-line">
+          <div class="profile-name-age">Meera, 27 · She/Her</div>
+          <div class="profile-meta">3 km · Online</div>
+        </div>
+        <div class="profile-meta">Frontend Engineer · Lives in Bengaluru</div>
+        <div class="tag-row" style="margin-top:6px;">
+          <span class="tag-pill">🍷 Drinks socially</span>
+          <span class="tag-pill">🚭 Non-smoker</span>
+          <span class="tag-pill">Straight</span>
+        </div>
+        <div class="bio-block">
+          <div class="bio-label">Bio</div>
+          <div>Coffee, code, and badly timed puns. Looking for someone I can send memes and playlists to.</div>
+        </div>
+      </div>
+      <div class="discovery-footer">
+        <div class="discovery-actions-main">
+          <button class="swipe-btn dislike" title="Nope">✖</button>
+          <button class="swipe-btn big like" title="Like">❤</button>
+          <button class="swipe-btn super" title="Super like">⭐</button>
+          <button class="swipe-btn" title="Message">💬</button>
+        </div>
+        <div class="discovery-actions-secondary">
+          <button class="btn-secondary" id="openGiftModalBtn">
+            🎁 Send gift
+          </button>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-secondary">📞 Audio</button>
+            <button class="btn-secondary">🎥 Video</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: GIFTS -->
+<div class="overlay" id="giftModal">
+  <div class="overlay-card">
+    <div class="overlay-close" data-close-overlay>&times;</div>
+    <h3 class="section-title" style="margin-bottom:4px;">Send a gift</h3>
+    <div class="section-body">
+      These are just placeholders. In the live app, you’d show prices in credits and a short description.
+    </div>
+    <div class="plans-grid" style="margin-top:8px;">
+      <div class="plan-card">
+        <div class="plan-title">☕ Coffee on me</div>
+        <div class="plan-details">A small nudge that says “Let’s grab a coffee sometime.”</div>
+        <div class="plan-price" style="font-size:14px;">5 credits</div>
+        <button class="btn-primary">Send gift</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-title">🎬 Movie night</div>
+        <div class="plan-details">Perfect if you’ve already bonded over films.</div>
+        <div class="plan-price" style="font-size:14px;">8 credits</div>
+        <button class="btn-primary">Send gift</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-title">🎉 Celebration pack</div>
+        <div class="plan-details">Use this for big wins, new jobs, or birthdays.</div>
+        <div class="plan-price" style="font-size:14px;">12 credits</div>
+        <button class="btn-primary">Send gift</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: FILTERS (DISCOVERY) -->
+<div class="overlay" id="filterModal">
+  <div class="overlay-card">
+    <div class="overlay-close" data-close-overlay>&times;</div>
+    <h3 class="section-title" style="margin-bottom:4px;">Discovery filters</h3>
+    <div class="section-body">
+      These controls are only visual for now. Your dev can hook them into your backend search.
+    </div>
+    <div class="section-small-title">Distance</div>
+    <div class="tag-row" style="margin-bottom:6px;">
+      <span class="tag-pill">0–5 km</span>
+      <span class="tag-pill">5–15 km</span>
+      <span class="tag-pill">15–30 km</span>
+    </div>
+
+    <div class="section-small-title">Looking for</div>
+    <div class="tag-row" style="margin-bottom:6px;">
+      <span class="tag-pill">Short-term</span>
+      <span class="tag-pill">Long-term</span>
+      <span class="tag-pill">Open to both</span>
+    </div>
+
+    <div class="section-small-title">Lifestyle</div>
+    <div class="tag-row">
+      <span class="tag-pill">Drinks socially</span>
+      <span class="tag-pill">Doesn’t drink</span>
+      <span class="tag-pill">Non-smoker</span>
+      <span class="tag-pill">Smokes sometimes</span>
+    </div>
+
+    <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px;">
+      <button class="btn-secondary" data-close-overlay>Reset</button>
+      <button class="btn-primary" data-close-overlay>Apply</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // NAVIGATION (desktop + mobile)
+  const pages = document.querySelectorAll(".page");
+  const sidebarItems = document.querySelectorAll(".nav-item");
+  const mobileNavItems = document.querySelectorAll(".mobile-nav-item");
+  const headerTitle = document.getElementById("headerTitle");
+  const headerSubtitle = document.getElementById("headerSubtitle");
+
+  const headerMeta = {
+    discovery: {
+      title: "Discovery",
+      subtitle: "Swipe through curated profiles one at a time.",
+      showFilter: true
+    },
+    browse: {
+      title: "Browse profiles",
+      subtitle: "See more people at once and open full profiles in a tap.",
+      showFilter: true
+    },
+    likes: {
+      title: "Who liked you",
+      subtitle: "See who’s already said yes to you.",
+      showFilter: false
+    },
+    profile: {
+      title: "My profile",
+      subtitle: "Edit what people see when they land on you.",
+      showFilter: false
+    },
+    subscription: {
+      title: "Subscriptions",
+      subtitle: "Upgrade to unlock more control and visibility.",
+      showFilter: false
+    },
+    credits: {
+      title: "Credits & gifts",
+      subtitle: "Use credits to send gifts, boosts, and super likes.",
+      showFilter: false
+    },
+    upgrades: {
+      title: "Plan overview",
+      subtitle: "Subscriptions and credits summarized in one place.",
+      showFilter: false
+    },
+    messages: {
+      title: "Messages",
+      subtitle: "Chat, audio, and video with your matches.",
+      showFilter: false
+    }
+  };
+
+  function setActivePage(page) {
+    pages.forEach(p => p.classList.toggle("active", p.id === "page-" + page));
+    sidebarItems.forEach(item => item.classList.toggle("active", item.dataset.page === page));
+    mobileNavItems.forEach(item => item.classList.toggle("active", item.dataset.page === page));
+
+    const meta = headerMeta[page];
+    if (meta) {
+      headerTitle.textContent = meta.title;
+      headerSubtitle.textContent = meta.subtitle;
+      document.getElementById("filterBtn").style.display = meta.showFilter ? "inline-flex" : "none";
+    }
+  }
+
+  sidebarItems.forEach(item => {
+    item.addEventListener("click", () => setActivePage(item.dataset.page));
+  });
+
+  mobileNavItems.forEach(item => {
+    item.addEventListener("click", () => setActivePage(item.dataset.page));
+  });
+
+  // cross-page jump buttons
+  document.querySelectorAll("[data-page-jump]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-page-jump");
+      setActivePage(target);
+    });
+  });
+
+  // DISCOVERY multi-photo gallery
+  const discoveryPhotoMain = document.getElementById("discoveryPhotoMain");
+  const photoCounter = document.getElementById("photoCounter");
+  const photoThumbs = document.querySelectorAll("#photoThumbs .thumb-pill");
+
+  function setPhoto(index) {
+    discoveryPhotoMain.classList.remove("photo-1","photo-2","photo-3","photo-4");
+    discoveryPhotoMain.classList.add("photo-" + index);
+    photoCounter.textContent = index + " / 4";
+    photoThumbs.forEach(t => t.classList.toggle("active", t.dataset.photo === String(index)));
+  }
+
+  photoThumbs.forEach(thumb => {
+    thumb.addEventListener("click", () => {
+      const idx = thumb.dataset.photo;
+      setPhoto(idx);
+    });
+  });
+
+  // BROWSE: open profile modal
+  const profileModal = document.getElementById("profileModal");
+  document.querySelectorAll(".profile-card").forEach(card => {
+    card.addEventListener("click", () => {
+      profileModal.classList.add("active");
+    });
+  });
+
+  // Gifts modal from profile modal
+  const giftModal = document.getElementById("giftModal");
+  document.getElementById("openGiftModalBtn")?.addEventListener("click", () => {
+    giftModal.classList.add("active");
+  });
+
+  // Filters modal (from header + inline)
+  const filterModal = document.getElementById("filterModal");
+  document.getElementById("filterBtn").addEventListener("click", () => {
+    filterModal.classList.add("active");
+  });
+  document.getElementById("openFilterInline").addEventListener("click", () => {
+    filterModal.classList.add("active");
+  });
+
+  // Generic close overlay
+  document.querySelectorAll("[data-close-overlay]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".overlay").forEach(o => o.classList.remove("active"));
+    });
+  });
+  document.querySelectorAll(".overlay").forEach(overlay => {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) overlay.classList.remove("active");
+    });
+  });
+
+  // Messages: simple send behaviour
+  const chatBody = document.getElementById("chatBody");
+  const chatInput = document.getElementById("chatInput");
+  const chatSendBtn = document.getElementById("chatSendBtn");
+
+  function sendChatMessage() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+    const row = document.createElement("div");
+    row.className = "chat-row me";
+    row.innerHTML = `<div class="chat-bubble">${text}<div class="chat-meta-line">You · now</div></div>`;
+    chatBody.appendChild(row);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    chatInput.value = "";
+  }
+
+  chatSendBtn.addEventListener("click", sendChatMessage);
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+
+  // Conversation switch (stub)
+  document.querySelectorAll(".conv-item").forEach(item => {
+    item.addEventListener("click", () => {
+      document.querySelectorAll(".conv-item").forEach(i => i.classList.remove("active"));
+      item.classList.add("active");
+      const name = item.querySelector(".conv-name")?.textContent || "Match";
+      document.getElementById("chatTarget").textContent = name;
+      // In a real app you'd load thread here
+    });
+  });
+
+  // PROFILE TABS
+  const tabButtons = document.querySelectorAll(".profile-tab-btn");
+  const tabPanels = document.querySelectorAll(".profile-tab-panel");
+
+  function setActiveTab(tab) {
+    tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+    tabPanels.forEach(panel => panel.classList.toggle("active", panel.dataset.tab-panel === tab));
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+  });
+
+  document.querySelectorAll("[data-tab-jump]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tab = btn.getAttribute("data-tab-jump");
+      setActiveTab(tab);
+      // scroll into view in case they're low on the page
+      document.querySelector(".profile-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  // Default states
+  setActivePage("discovery");
+  setPhoto(1);
+</script>
+</body>
+</html>

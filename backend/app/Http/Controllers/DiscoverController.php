@@ -71,7 +71,7 @@ class DiscoverController extends Controller
             ->sortBy(function ($u) use ($user) {
                 $boostPriority = (isset($u->boost_until) && $u->boost_until && $u->boost_until > now()) ? 0 : 1;
                 $dist = ($user->lat && $user->lng && $u->lat && $u->lng) ? self::haversineKm($user->lat, $user->lng, $u->lat, $u->lng) : 99999;
-                return [$boostPriority, $dist, -optional($u->created_at)->timestamp ?? 0];
+                return [$boostPriority, $dist, -(optional($u->created_at)->timestamp ?? 0)];
             })
             ->take(20)
             ->map(fn($u) => [

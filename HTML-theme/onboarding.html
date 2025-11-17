@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BingeDate – Onboarding Wizard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #050816;
+      --accent-1: #ff3366;
+      --accent-2: #7b3eff;
+      --accent-3: #ffb347;
+      --surface: rgba(10, 12, 25, 0.85);
+      --border-soft: rgba(255,255,255,0.06);
+      --text-main: #f9fafb;
+      --text-muted: #94a3b8;
+      --radius-xl: 999px;
+      --radius-lg: 24px;
+      --transition-fast: 0.18s ease-out;
+      --shadow-soft: 0 24px 60px rgba(0,0,0,0.45);
+      --hero-bg: url("images/hero-1.jpg");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px circle at 0% 0%, #3b82f6 0, transparent 55%),
+        radial-gradient(1200px circle at 100% 100%, #ec4899 0, transparent 55%),
+        #020617;
+      color: var(--text-main);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1240px;
+      margin: 16px;
+      border-radius: 32px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+      background: rgba(15, 23, 42, 0.85);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(26px);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      min-height: calc(100vh - 32px);
+    }
+
+    /* LEFT PANEL */
+
+    .auth-panel {
+      position: relative;
+      padding: 24px 26px 22px;
+      display: flex;
+      flex-direction: column;
+      background:
+        radial-gradient(circle at 0 0, rgba(148, 163, 255, 0.35), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.35), transparent 60%),
+        linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+    }
+
+    .auth-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: conic-gradient(from 210deg, var(--accent-1), var(--accent-2), #22d3ee, var(--accent-1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(248,113,113,0.6);
+    }
+
+    .brand-logo span {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(120deg, #f97316, #ec4899, #6366f1);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .brand-right {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .auth-card {
+      padding: 18px 18px 16px;
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.93);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .auth-copy {
+      margin-bottom: 12px;
+    }
+
+    .auth-tagline {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-3);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .auth-title {
+      font-size: 22px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .auth-title span {
+      background: linear-gradient(115deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .auth-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Progress bar */
+
+    .progress-wrapper {
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .progress-label span:first-child {
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(51,65,85,0.9);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      transition: width 200ms ease-out;
+    }
+
+    /* Wizard */
+
+    .wizard {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      margin-top: 4px;
+    }
+
+    .wizard-step {
+      display: none;
+      animation: fadeIn 220ms ease-out;
+    }
+
+    .wizard-step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-card {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.45);
+      background: rgba(15,23,42,0.98);
+      padding: 12px 12px 10px;
+      margin-bottom: 8px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .section-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .section-body {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .pill-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pill-option {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), border var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .pill-option span.small-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.8);
+    }
+
+    .pill-option.selected {
+      background-image: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+      border-color: transparent;
+      box-shadow: 0 12px 30px rgba(248,113,113,0.5);
+    }
+
+    .pill-option.selected span.small-dot {
+      background: #22c55e;
+    }
+
+    .pill-option:hover {
+      transform: translateY(-0.5px);
+    }
+
+    /* Photos */
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .photo-slot {
+      position: relative;
+      padding-top: 100%;
+      border-radius: 14px;
+      border: 1px dashed rgba(148,163,184,0.6);
+      background: radial-gradient(circle at 0 0, rgba(148,163,255,0.12), transparent 60%),
+                  rgba(15,23,42,0.96);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .photo-slot:hover {
+      border-style: solid;
+      border-color: rgba(248,113,113,0.9);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.55);
+    }
+
+    .photo-slot-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 6px;
+      text-align: center;
+    }
+
+    .photo-slot-inner .plus {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .photo-slot.has-image {
+      border-style: solid;
+      border-color: rgba(148,163,184,0.9);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .photo-slot.has-image .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.0));
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .photo-slot.has-image:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .photo-slot.has-image .photo-label {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      right: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #e5e7eb;
+    }
+
+    .photo-slot input[type="file"] {
+      display: none;
+    }
+
+    .photo-primary-tag {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.85);
+      border: 1px solid rgba(148,163,184,0.8);
+    }
+
+    /* Interests & prompts */
+
+    .category-group {
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed rgba(51,65,85,0.8);
+    }
+
+    .category-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .prompt-row {
+      border-radius: 12px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.96);
+      padding: 8px;
+      margin-top: 4px;
+    }
+
+    .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    .prompt-select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      padding: 4px 8px;
+      font-size: 11px;
+      outline: none;
+    }
+
+    .prompt-select:focus {
+      border-color: rgba(248,113,113,0.9);
+    }
+
+    .prompt-textarea {
+      width: 100%;
+      resize: none;
+      border-radius: 10px;
+      border: 1px solid rgba(51,65,85,0.9);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      padding: 6px 8px;
+      font-size: 11px;
+      outline: none;
+      min-height: 46px;
+    }
+
+    .prompt-textarea::placeholder {
+      color: rgba(148,163,184,0.8);
+    }
+
+    .prompt-textarea:focus {
+      border-color: rgba(248,113,113,0.9);
+    }
+
+    /* City */
+
+    .city-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .city-input {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-main);
+      padding: 8px 10px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .btn-ghost {
+      border-radius: var(--radius-xl);
+      border: 1px dashed rgba(148,163,184,0.7);
+      padding: 7px 10px;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+    }
+
+    /* Bottom controls */
+
+    .wizard-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wizard-footer-left {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border-radius: var(--radius-xl);
+      border: none;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      box-shadow: 0 18px 40px rgba(248,113,113,0.55);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      box-shadow: 0 22px 55px rgba(248,113,113,0.7);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      filter: brightness(0.98);
+      box-shadow: 0 14px 30px rgba(15,23,42,0.9);
+    }
+
+    .btn-secondary {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 8px 14px;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,0.92);
+    }
+
+    .link-inline {
+      border: none;
+      background: none;
+      padding: 0;
+      font-size: 11px;
+      color: var(--accent-3);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+
+    .wizard-meta {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* RIGHT PANEL */
+
+    .promo-panel {
+      position: relative;
+      overflow: hidden;
+      background-color: #020617;
+      display: flex;
+      align-items: flex-end;
+      justify-content: stretch;
+    }
+
+    .promo-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.2)),
+        var(--hero-bg) center/cover no-repeat;
+      transform: scale(1.05);
+      filter: saturate(1.1) contrast(1.1);
+    }
+
+    .promo-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(120% 170% at 0 100%, rgba(59,130,246,0.65), transparent 65%),
+        radial-gradient(120% 200% at 100% 0, rgba(236,72,153,0.7), transparent 55%);
+      mix-blend-mode: soft-light;
+      opacity: 0.95;
+    }
+
+    .promo-content {
+      position: relative;
+      z-index: 2;
+      padding: 32px 32px 40px;
+      color: #f9fafb;
+      max-width: 520px;
+    }
+
+    .promo-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .promo-eyebrow span {
+      background: rgba(15,23,42,0.68);
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      backdrop-filter: blur(18px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .promo-title {
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 800;
+      text-shadow: 0 14px 40px rgba(15,23,42,0.85);
+      margin-bottom: 14px;
+    }
+
+    .promo-title span { display: block; }
+
+    .promo-body {
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 420px;
+      color: #e5e7eb;
+      text-shadow: 0 10px 20px rgba(15,23,42,0.8);
+    }
+
+    .promo-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 11px;
+    }
+
+    .promo-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.75);
+      border: 1px solid rgba(148,163,184,0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .promo-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    /* Overlay for face verify info */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .overlay.active { display: flex; }
+
+    .overlay-card {
+      max-width: 420px;
+      background: rgba(15,23,42,0.96);
+      border-radius: 24px;
+      padding: 22px 20px 18px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--text-main);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.65);
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .overlay-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .overlay-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .overlay-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .overlay-close {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      cursor: pointer;
+      font-size: 18px;
+      color: rgba(148,163,184,0.85);
+    }
+
+    .overlay-close:hover { color: #e5e7eb; }
+
+    .btn-small-primary {
+      border-radius: var(--radius-xl);
+      border: none;
+      padding: 9px 15px;
+      background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 900px) {
+      .app-shell {
+        grid-template-columns: minmax(0, 1fr);
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .promo-panel { display: none; }
+
+      .auth-panel {
+        padding: 22px 18px 18px;
+        background:
+          linear-gradient(to top, rgba(15,23,42,0.92), rgba(15,23,42,0.4)),
+          var(--hero-bg) center/cover no-repeat;
+        background-attachment: fixed;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-title { font-size: 18px; }
+      .auth-title { font-size: 20px; }
+      .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- LEFT: ONBOARDING WIZARD -->
+  <section class="auth-panel">
+    <header class="auth-header">
+      <div class="brand">
+        <div class="brand-logo"><span>❤</span></div>
+        <div class="brand-text">
+          <div class="brand-title">BingeDate</div>
+          <div class="brand-subtitle">Let’s set up your profile.</div>
+        </div>
+      </div>
+      <div class="brand-right">
+        <div>Onboarding</div>
+        <div>About 2–3 minutes</div>
+      </div>
+    </header>
+
+    <div class="auth-card">
+      <div class="auth-copy">
+        <div class="auth-tagline">One screen at a time</div>
+        <div class="auth-title">
+          <span id="stepTitle">First up: your gender.</span>
+        </div>
+        <p class="auth-subtitle" id="stepSubtitle">
+          We’ll walk you through a few small questions to tune your matches.
+        </p>
+      </div>
+
+      <div class="progress-wrapper">
+        <div class="progress-label">
+          <span id="stepLabel">Step 1 of 8</span>
+          <span id="stepContext">Basics</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="wizard">
+
+        <!-- STEP 1: GENDER -->
+        <div class="wizard-step active" data-step="1">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">How do you identify?</div>
+              <div class="section-helper">Required</div>
+            </div>
+            <div class="section-body">
+              Choose the option that feels most accurate. You can choose how this shows on your profile later.
+            </div>
+            <div class="pill-grid" data-group="gender" data-multi="false">
+              <button type="button" class="pill-option" data-value="man">
+                <span class="small-dot"></span> Man
+              </button>
+              <button type="button" class="pill-option" data-value="woman">
+                <span class="small-dot"></span> Woman
+              </button>
+              <button type="button" class="pill-option" data-value="non-binary">
+                <span class="small-dot"></span> Non-binary
+              </button>
+              <button type="button" class="pill-option" data-value="prefer-not">
+                <span class="small-dot"></span> Prefer not to say
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: ORIENTATION -->
+        <div class="wizard-step" data-step="2">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Your orientation</div>
+              <div class="section-helper">Choose one or more</div>
+            </div>
+            <div class="section-body">
+              This helps us understand how to match you. You can update this later.
+            </div>
+            <div class="pill-grid" data-group="orientation" data-multi="true">
+              <button type="button" class="pill-option" data-value="straight">
+                <span class="small-dot"></span> Straight
+              </button>
+              <button type="button" class="pill-option" data-value="gay">
+                <span class="small-dot"></span> Gay
+              </button>
+              <button type="button" class="pill-option" data-value="lesbian">
+                <span class="small-dot"></span> Lesbian
+              </button>
+              <button type="button" class="pill-option" data-value="bisexual">
+                <span class="small-dot"></span> Bisexual
+              </button>
+              <button type="button" class="pill-option" data-value="pansexual">
+                <span class="small-dot"></span> Pansexual
+              </button>
+              <button type="button" class="pill-option" data-value="asexual">
+                <span class="small-dot"></span> Asexual
+              </button>
+              <button type="button" class="pill-option" data-value="queer">
+                <span class="small-dot"></span> Queer
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: WHO YOU'RE INTERESTED IN -->
+        <div class="wizard-step" data-step="3">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Who do you want to see?</div>
+              <div class="section-helper">You can pick more than one</div>
+            </div>
+            <div class="section-body">
+              We’ll prioritise showing you people who match these preferences.
+            </div>
+            <div class="pill-grid" data-group="see" data-multi="true">
+              <button type="button" class="pill-option" data-value="men">
+                <span class="small-dot"></span> Men
+              </button>
+              <button type="button" class="pill-option" data-value="women">
+                <span class="small-dot"></span> Women
+              </button>
+              <button type="button" class="pill-option" data-value="non-binary">
+                <span class="small-dot"></span> Non-binary people
+              </button>
+              <button type="button" class="pill-option" data-value="everyone">
+                <span class="small-dot"></span> Open to everyone
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: PHOTOS -->
+        <div class="wizard-step" data-step="4">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Add your photos</div>
+              <div class="section-helper">Up to 6 · Cover first</div>
+            </div>
+            <div class="section-body">
+              Start with at least one clear photo. You can always add more later.
+            </div>
+            <div class="photo-grid">
+              <div class="photo-slot" data-index="0">
+                <input type="file" accept="image/*">
+                <div class="photo-slot-inner">
+                  <div class="plus">+</div>
+                  <div>Cover photo</div>
+                </div>
+              </div>
+              <div class="photo-slot" data-index="1">
+                <input type="file" accept="image/*">
+                <div class="photo-slot-inner">
+                  <div class="plus">+</div>
+                  <div>Full body</div>
+                </div>
+              </div>
+              <div class="photo-slot" data-index="2">
+                <input type="file" accept="image/*">
+                <div class="photo-slot-inner">
+                  <div class="plus">+</div>
+                  <div>Doing something you love</div>
+                </div>
+              </div>
+              <div class="photo-slot" data-index="3">
+                <input type="file" accept="image/*">
+                <div class="photo-slot-inner">
+                  <div class="plus">+</div>
+                  <div>Casual moment</div>
+                </div>
+              </div>
+              <div class="photo-slot" data-index="4">
+                <input type="file" accept="image/*">
+                <div class="photo-slot-inner">
+                  <div class="plus">+</div>
+                  <div>Another favourite</div>
+                </div>
+              </div>
+              <div class="photo-slot" data-index="5">
+                <input type="file" accept="image/*">
+                <div class="photo-slot-inner">
+                  <div class="plus">+</div>
+                  <div>Pets / hobbies / etc.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: INTERESTS -->
+        <div class="wizard-step" data-step="5">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Interests</div>
+              <div class="section-helper">Pick a few</div>
+            </div>
+            <div class="section-body">
+              Choose what sounds most like you. We’ll use this to tune your feed.
+            </div>
+
+            <div class="category-group">
+              <div class="category-title">Lifestyle</div>
+              <div class="pill-grid" data-group="interests-lifestyle" data-multi="true">
+                <button type="button" class="pill-option" data-value="coffee">Coffee dates</button>
+                <button type="button" class="pill-option" data-value="nightlife">Nightlife</button>
+                <button type="button" class="pill-option" data-value="fitness">Fitness</button>
+                <button type="button" class="pill-option" data-value="travel">Travel</button>
+                <button type="button" class="pill-option" data-value="homebody">Cozy nights in</button>
+              </div>
+            </div>
+
+            <div class="category-group">
+              <div class="category-title">Hobbies</div>
+              <div class="pill-grid" data-group="interests-hobbies" data-multi="true">
+                <button type="button" class="pill-option" data-value="books">Books</button>
+                <button type="button" class="pill-option" data-value="music">Live music</button>
+                <button type="button" class="pill-option" data-value="gaming">Gaming</button>
+                <button type="button" class="pill-option" data-value="cooking">Cooking</button>
+                <button type="button" class="pill-option" data-value="art">Art & design</button>
+              </div>
+            </div>
+
+            <div class="category-group">
+              <div class="category-title">Vibe</div>
+              <div class="pill-grid" data-group="interests-vibe" data-multi="true">
+                <button type="button" class="pill-option" data-value="introvert">Introvert</button>
+                <button type="button" class="pill-option" data-value="extrovert">Extrovert</button>
+                <button type="button" class="pill-option" data-value="dog-person">Dog person</button>
+                <button type="button" class="pill-option" data-value="cat-person">Cat person</button>
+                <button type="button" class="pill-option" data-value="plant-parent">Plant parent</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 6: PROMPTS -->
+        <div class="wizard-step" data-step="6">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Prompts</div>
+              <div class="section-helper">At least one answer</div>
+            </div>
+            <div class="section-body">
+              Give people something easy to reply to. One prompt is enough to start.
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-header">
+                <span>Prompt 1</span>
+                <span style="font-size:10px;color:var(--text-muted);">Required</span>
+              </div>
+              <select class="prompt-select">
+                <option>My perfect first date...</option>
+                <option>We’ll get along if...</option>
+                <option>I’m looking for...</option>
+                <option>Two truths and a lie</option>
+              </select>
+              <textarea class="prompt-textarea" placeholder="Type your answer here"></textarea>
+            </div>
+
+            <div class="prompt-row">
+              <div class="prompt-header">
+                <span>Prompt 2</span>
+                <span style="font-size:10px;color:var(--text-muted);">Optional</span>
+              </div>
+              <select class="prompt-select">
+                <option>A non-negotiable for me is...</option>
+                <option>The last great thing I watched...</option>
+                <option>The dorkiest thing about me...</option>
+                <option>My friends describe me as...</option>
+              </select>
+              <textarea class="prompt-textarea" placeholder="Add more detail if you’d like"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 7: CITY -->
+        <div class="wizard-step" data-step="7">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Where are you based?</div>
+              <div class="section-helper">City only</div>
+            </div>
+            <div class="section-body">
+              We’ll show an approximate city or area—never your exact address.
+            </div>
+
+            <div class="city-row">
+              <input id="cityInput" class="city-input" type="text" placeholder="Bengaluru, India">
+              <button type="button" class="btn-ghost" id="useLocationBtn">📍 Use location</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 8: VERIFICATION -->
+        <div class="wizard-step" data-step="8">
+          <div class="section-card">
+            <div class="section-head">
+              <div class="section-title">Face verification (optional)</div>
+              <div class="section-helper">Boosts trust</div>
+            </div>
+            <div class="section-body">
+              Verified profiles get a small badge and usually more replies. We’ll ask for a quick selfie in the real app.
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;">
+              <button type="button" class="btn-secondary" id="startVerifyBtn">
+                Start face verification
+              </button>
+              <button type="button" class="link-inline" id="skipVerifyBtn">Skip for now</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- WIZARD FOOTER BUTTONS -->
+      <div class="wizard-footer">
+        <div class="wizard-footer-left">
+          <button type="button" class="btn-secondary" id="backBtn">Back</button>
+        </div>
+        <button type="button" class="btn-primary" id="nextBtn">
+          Next <span>→</span>
+        </button>
+      </div>
+
+      <div class="wizard-meta">
+        <span>You can update most of this later in Settings.</span>
+        <span>Already done this? <button type="button" class="link-inline">Skip to app</button></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: HERO / TEXT (DESKTOP ONLY) -->
+  <aside class="promo-panel" aria-hidden="true">
+    <div class="promo-bg"></div>
+    <div class="promo-overlay"></div>
+    <div class="promo-content">
+      <div class="promo-eyebrow">
+        <span>
+          <div class="promo-pill-dot"></div>
+          You’re almost there
+        </span>
+      </div>
+      <h2 class="promo-title" id="promoTitle">
+        <span>Build a profile people feel.</span>
+        <span>Not just another swipe.</span>
+      </h2>
+      <p class="promo-body" id="promoBody">
+        A few focused steps now means better matches later. We keep things simple: photos, interests, prompts, and your city.
+      </p>
+      <div class="promo-pills" id="promoPills">
+        <div class="promo-pill"><span class="promo-pill-dot"></span>Step 1 · Basics</div>
+        <div class="promo-pill">✨ Designed for real connections</div>
+        <div class="promo-pill">🔐 Privacy-first by default</div>
+        <div class="promo-pill">⚡ Web & mobile ready</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- FACE VERIFICATION INFO OVERLAY -->
+<div id="verifyOverlay" class="overlay" role="dialog" aria-modal="true">
+  <div class="overlay-card">
+    <div class="overlay-close" data-close-overlay>&times;</div>
+    <h3 class="overlay-title">Face verification (preview)</h3>
+    <div class="overlay-body">
+      <p>
+        In the real app, this step would guide you through a quick selfie or video to confirm that your profile photos
+        are really you. Nothing here is stored yet—this is just a UI placeholder.
+      </p>
+      <p style="margin-top:8px;">
+        Once your developer connects this, you’ll see a verified badge on your profile after a successful check.
+      </p>
+    </div>
+    <div class="overlay-actions">
+      <button type="button" class="btn-small-primary" data-close-overlay>Got it</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Wizard state
+  const totalSteps = 8;
+  let currentStep = 1;
+
+  const stepTitle = document.getElementById("stepTitle");
+  const stepSubtitle = document.getElementById("stepSubtitle");
+  const stepLabel = document.getElementById("stepLabel");
+  const stepContext = document.getElementById("stepContext");
+  const progressBar = document.getElementById("progressBar");
+  const promoTitle = document.getElementById("promoTitle");
+  const promoBody = document.getElementById("promoBody");
+  const promoPills = document.getElementById("promoPills");
+
+  const stepMeta = {
+    1: {
+      title: "First up: your gender.",
+      subtitle: "Just one tap to start tuning your matches.",
+      context: "Basics",
+      promoTitle: ["Start with the basics.", "Let the app meet the real you."],
+      promoBody: "Your gender and orientation help us avoid noisy matches and keep things relevant.",
+      promoTag: "Step 1 · Gender",
+    },
+    2: {
+      title: "Now your orientation.",
+      subtitle: "Pick what fits. You can choose more than one.",
+      context: "Orientation",
+      promoTitle: ["Set your orientation.", "We’ll do the rest quietly."],
+      promoBody: "We use orientation to understand who to show you, without broadcasting labels you don’t want to share.",
+      promoTag: "Step 2 · Orientation",
+    },
+    3: {
+      title: "Who do you want to see?",
+      subtitle: "Tell us the kind of people you’re interested in.",
+      context: "Preferences",
+      promoTitle: ["Tell us your crowd.", "Matches that feel intentional."],
+      promoBody: "Choosing who you’d like to see shapes your feed so it feels curated, not crowded.",
+      promoTag: "Step 3 · Who you’re into",
+    },
+    4: {
+      title: "Add a photo or two.",
+      subtitle: "Recent, clear photos work best.",
+      context: "Photos",
+      promoTitle: ["Show your life, not just your face.", "Let your photos do some of the talking."],
+      promoBody: "Even one good photo makes a big difference. You can always add more later.",
+      promoTag: "Step 4 · Photos",
+    },
+    5: {
+      title: "Pick a few interests.",
+      subtitle: "The more honest, the better the matches.",
+      context: "Interests",
+      promoTitle: ["Let your interests filter for you.", "Find people on your wavelength."],
+      promoBody: "Interests help nudge you toward people with similar habits, hobbies, and weekend plans.",
+      promoTag: "Step 5 · Interests",
+    },
+    6: {
+      title: "Answer at least one prompt.",
+      subtitle: "Short answers are perfect.",
+      context: "Prompts",
+      promoTitle: ["Give them something to say hi to.", "Prompts that spark real conversation."],
+      promoBody: "A couple of honest lines are more powerful than a long bio—and easier to respond to.",
+      promoTag: "Step 6 · Prompts",
+    },
+    7: {
+      title: "Set your city.",
+      subtitle: "Just the city, never your address.",
+      context: "Location",
+      promoTitle: ["Meet people you can actually meet.", "Keep it local, keep it safe."],
+      promoBody: "City-level location keeps things relevant without over-sharing where you live or work.",
+      promoTag: "Step 7 · City",
+    },
+    8: {
+      title: "Optional: get verified.",
+      subtitle: "More trust, usually better replies.",
+      context: "Verification",
+      promoTitle: ["A small badge, big signal.", "Show you’re really you."],
+      promoBody: "Face verification is optional but helps others feel safer saying yes to that first chat or date.",
+      promoTag: "Step 8 · Verification",
+    },
+  };
+
+  function updateStepUI() {
+    // show/hide step blocks
+    document.querySelectorAll(".wizard-step").forEach(step => {
+      const s = Number(step.getAttribute("data-step"));
+      step.classList.toggle("active", s === currentStep);
+    });
+
+    const meta = stepMeta[currentStep];
+
+    stepTitle.textContent = meta.title;
+    stepSubtitle.textContent = meta.subtitle;
+    stepLabel.textContent = `Step ${currentStep} of ${totalSteps}`;
+    stepContext.textContent = meta.context;
+
+    const progress = (currentStep / totalSteps) * 100;
+    progressBar.style.width = progress + "%";
+
+    if (promoTitle && promoBody && promoPills) {
+      promoTitle.innerHTML = `<span>${meta.promoTitle[0]}</span><span>${meta.promoTitle[1]}</span>`;
+      promoBody.textContent = meta.promoBody;
+      promoPills.innerHTML = `
+        <div class="promo-pill"><span class="promo-pill-dot"></span>${meta.promoTag}</div>
+        <div class="promo-pill">✨ Focused, step-by-step onboarding</div>
+        <div class="promo-pill">🔐 Privacy-first by design</div>
+        <div class="promo-pill">⚡ Web & mobile ready</div>
+      `;
+    }
+
+    // back button visibility
+    document.getElementById("backBtn").style.visibility =
+      currentStep === 1 ? "hidden" : "visible";
+
+    // next button label
+    const nextBtn = document.getElementById("nextBtn");
+    if (currentStep === totalSteps) {
+      nextBtn.textContent = "Finish";
+    } else {
+      nextBtn.innerHTML = 'Next <span>→</span>';
+    }
+  }
+
+  function goToStep(step) {
+    if (step < 1 || step > totalSteps) return;
+    currentStep = step;
+    updateStepUI();
+  }
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (currentStep === totalSteps) {
+      // Final submit in real app
+      alert("Onboarding complete. In production, you’d now move the user into the main app.");
+      return;
+    }
+    goToStep(currentStep + 1);
+  });
+
+  document.getElementById("backBtn").addEventListener("click", () => {
+    goToStep(currentStep - 1);
+  });
+
+  // pill selection logic
+  document.querySelectorAll(".pill-grid").forEach(grid => {
+    const multi = grid.dataset.multi === "true";
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".pill-option");
+      if (!btn) return;
+      if (multi) {
+        btn.classList.toggle("selected");
+      } else {
+        grid.querySelectorAll(".pill-option").forEach(p => p.classList.remove("selected"));
+        btn.classList.add("selected");
+      }
+    });
+  });
+
+  // photo slots behaviour
+  document.querySelectorAll(".photo-slot").forEach(slot => {
+    const input = slot.querySelector('input[type="file"]');
+    slot.addEventListener("click", () => input && input.click());
+    input.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      slot.style.backgroundImage = `url("${url}")`;
+      slot.classList.add("has-image");
+
+      if (!slot.querySelector(".photo-overlay")) {
+        const overlay = document.createElement("div");
+        overlay.className = "photo-overlay";
+        const label = document.createElement("div");
+        label.className = "photo-label";
+        label.innerHTML = `
+          <span>${slot.dataset.index === "0" ? "Cover photo" : "Tap to replace"}</span>
+          ${slot.dataset.index === "0" ? '<span class="photo-primary-tag">Primary</span>' : ""}
+        `;
+        slot.appendChild(overlay);
+        slot.appendChild(label);
+      }
+    });
+  });
+
+  // "Use location" demo
+  document.getElementById("useLocationBtn")?.addEventListener("click", () => {
+    alert("In the real app, this would ask for permission and fill in your city.");
+  });
+
+  // Face verification overlay
+  const verifyOverlay = document.getElementById("verifyOverlay");
+  document.getElementById("startVerifyBtn")?.addEventListener("click", () => {
+    verifyOverlay.classList.add("active");
+  });
+  document.querySelectorAll("[data-close-overlay]").forEach(btn => {
+    btn.addEventListener("click", () => verifyOverlay.classList.remove("active"));
+  });
+  verifyOverlay?.addEventListener("click", (e) => {
+    if (e.target === verifyOverlay) verifyOverlay.classList.remove("active");
+  });
+  document.getElementById("skipVerifyBtn")?.addEventListener("click", () => {
+    alert("You can verify your profile later from Settings.");
+  });
+
+  // init
+  updateStepUI();
+</script>
+</body>
+</html>

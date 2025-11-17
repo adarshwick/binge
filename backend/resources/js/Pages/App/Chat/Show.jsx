@@ -9,6 +9,8 @@ export default function Show({ match_id }) {
   const [msgs, setMsgs] = useState(messages)
   const [hasMore, setHasMore] = useState(props.has_more)
   const [typing, setTyping] = useState(false)
+  const [inputValue, setInputValue] = useState('')
+  const typingTimerRef = useRef(null)
   const [callVisible, setCallVisible] = useState(false)
   const [audioOnly, setAudioOnly] = useState(false)
   const localVideoRef = useRef(null)
@@ -20,7 +22,6 @@ export default function Show({ match_id }) {
   const agoraClientRef = useRef(null)
   const agoraLocalTracksRef = useRef(null)
   const [firebaseMessages, setFirebaseMessages] = useState([])
-  let inputValue = ''
   useEffect(() => {
     if (!window.Echo) return
     window.Echo.private(`match.${match_id}`).listen('MessageSent', (e) => {
@@ -186,6 +187,7 @@ export default function Show({ match_id }) {
     } else {
       router.post(route('app.chat.send', { match_id }), { content: inputValue }, { preserveScroll: true })
     }
+    setInputValue('')
   }
   return (
     <ChatLayout>
@@ -257,7 +259,13 @@ export default function Show({ match_id }) {
           </div>
         )}
         <div className="border-t p-2 flex items-center gap-2">
-          <input className="flex-1 border rounded px-3 py-2" placeholder="Type a message" onChange={e => (inputValue = e.target.value)} onInput={() => router.post(route('app.chat.typing', { match_id }), {}, { preserveScroll: true })} />
+          <input className="flex-1 border rounded px-3 py-2" placeholder="Type a message" value={inputValue} onChange={e => {
+            setInputValue(e.target.value)
+            if (typingTimerRef.current) clearTimeout(typingTimerRef.current)
+            typingTimerRef.current = setTimeout(() => {
+              router.post(route('app.chat.typing', { match_id }), {}, { preserveScroll: true })
+            }, 400)
+          }} />
           <button className="px-3 py-2 border rounded">GIF</button>
           <input id="image_input" type="file" accept="image/*" className="hidden" onChange={async e => {
             const file = e.target.files?.[0]

@@ -1,22 +1,17 @@
 import { useState } from 'react'
-import { Link } from '@inertiajs/react'
-
-const prompts = [
-  'My simple pleasures are...',
-  'The best way to win me over is...',
-  'Two truths and a lie...',
-  'My ideal weekend...',
-]
+import { Link, usePage } from '@inertiajs/react'
 
 export default function Profile() {
+  const { props } = usePage()
+  const prompts = props.prompts || []
   const [bio, setBio] = useState('')
   const [selected, setSelected] = useState([])
   const [answers, setAnswers] = useState({})
   function togglePrompt(p) {
-    setSelected(prev => prev.includes(p) ? prev.filter(x => x !== p) : prev.length < 3 ? [...prev, p] : prev)
+    setSelected(prev => prev.find(x => x.id === p.id) ? prev.filter(x => x.id !== p.id) : prev.length < 3 ? [...prev, p] : prev)
   }
   function setAnswer(p, v) {
-    setAnswers(prev => ({ ...prev, [prompts.indexOf(p)+1]: v }))
+    setAnswers(prev => ({ ...prev, [p.id]: v }))
   }
   return (
     <div className="min-h-screen bg-white px-6 py-6">
@@ -26,12 +21,12 @@ export default function Profile() {
         <p className="text-sm text-gray-600 mb-2">Select 3 profile prompts:</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
           {prompts.map(p => (
-            <button key={p} onClick={() => togglePrompt(p)} className={`text-left px-3 py-2 border rounded ${selected.includes(p) ? 'bg-pink-50 border-pink-500' : ''}`}>{p}</button>
+            <button key={p.id} onClick={() => togglePrompt(p)} className={`text-left px-3 py-2 border rounded ${selected.find(x => x.id === p.id) ? 'bg-pink-50 border-pink-500' : ''}`}>{p.text}</button>
           ))}
         </div>
         {selected.map(p => (
-          <div key={p} className="mb-2">
-            <label className="block text-xs text-gray-600 mb-1">Answer: {p}</label>
+          <div key={p.id} className="mb-2">
+            <label className="block text-xs text-gray-600 mb-1">Answer: {p.text}</label>
             <input className="w-full border rounded px-3 py-2" onChange={e => setAnswer(p, e.target.value)} />
           </div>
         ))}
