@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/app/liked-me', [\App\Http\Controllers\LikeController::class, 'likedMe'])->name('app.liked_me');
     Route::post('/app/boost', [\App\Http\Controllers\BoostController::class, 'apply'])->middleware('throttle:20,1')->name('app.boost');
     Route::get('/app/matches', [\App\Http\Controllers\MatchesController::class, 'index'])->name('app.matches');
+    Route::get('/app/user/{user_id}', [\App\Http\Controllers\UserProfileController::class, 'show'])->name('app.user');
     Route::get('/app/chat', [\App\Http\Controllers\ChatController::class, 'index'])->name('app.chat');
     Route::get('/app/chat/{match_id}', [\App\Http\Controllers\ChatController::class, 'show'])->name('app.chat.show');
     Route::get('/app/chat/{match_id}/messages', [\App\Http\Controllers\ChatController::class, 'messages'])->name('app.chat.messages');
@@ -54,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/app/webrtc/{match_id}/poll', [\App\Http\Controllers\WebRTCController::class, 'poll'])->name('app.webrtc.poll');
     Route::post('/app/push/register', [\App\Http\Controllers\PushController::class, 'register'])->name('app.push.register');
     Route::post('/app/location', [\App\Http\Controllers\LocationController::class, 'update'])->name('app.location.update');
+    Route::post('/app/block', [\App\Http\Controllers\BlockController::class, 'store'])->name('app.block');
+    Route::delete('/app/block/{user_id}', [\App\Http\Controllers\BlockController::class, 'destroy'])->name('app.block.remove');
+    Route::post('/app/report', [\App\Http\Controllers\ReportController::class, 'store'])->name('app.report');
     Route::get('/app/profile', function () {
         $photos = \App\Models\ProfilePhoto::where('user_id', auth()->id())->orderBy('order')->get()->map(fn($p)=>['id'=>$p->id,'url'=>\Illuminate\Support\Facades\Storage::url($p->path)]);
         return Inertia::render('App/Profile', ['photos' => $photos]);
@@ -62,6 +66,7 @@ Route::middleware('auth')->group(function () {
         $photos = \App\Models\ProfilePhoto::where('user_id', auth()->id())->orderBy('order')->get()->map(fn($p)=>['id'=>$p->id,'url'=>\Illuminate\Support\Facades\Storage::url($p->path)]);
         return Inertia::render('App/ProfileEdit', ['photos' => $photos]);
     })->name('app.profile.edit');
+    Route::post('/app/profile/bio', [\App\Http\Controllers\ProfileController::class, 'updateBio'])->name('app.profile.bio');
     Route::get('/app/billing', [\App\Http\Controllers\BillingController::class, 'index'])->name('app.billing');
     Route::post('/app/profile/photos', [\App\Http\Controllers\ProfileMediaController::class, 'upload'])->middleware('throttle:20,1')->name('app.profile.photos.upload');
     Route::patch('/app/profile/photos/order', [\App\Http\Controllers\ProfileMediaController::class, 'reorder'])->name('app.profile.photos.order');

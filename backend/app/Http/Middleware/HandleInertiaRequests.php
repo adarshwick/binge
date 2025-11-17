@@ -65,6 +65,8 @@ class HandleInertiaRequests extends Middleware
                 'seo_title' => optional(AppSetting::where('key', 'seo_title')->first())->value,
                 'seo_description' => optional(AppSetting::where('key', 'seo_description')->first())->value,
                 'analytics_snippet' => optional(AppSetting::where('key', 'analytics_snippet')->first())->value,
+                'price_super_like' => optional(AppSetting::where('key', 'price_super_like')->first())->value,
+                'price_boost' => optional(AppSetting::where('key', 'price_boost')->first())->value,
             ],
         ];
     }

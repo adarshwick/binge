@@ -21,6 +21,12 @@ class LikeController extends Controller
             'type' => ['required', 'in:pass,like,super_like'],
         ]);
 
+        $blockedA = \App\Models\UserBlock::where('user_id', $user->id)->where('blocked_user_id', $validated['to_user_id'])->exists();
+        $blockedB = \App\Models\UserBlock::where('user_id', $validated['to_user_id'])->where('blocked_user_id', $user->id)->exists();
+        if ($blockedA || $blockedB) {
+            return response()->json(['error' => 'User blocked'], 403);
+        }
+
         if (in_array($validated['type'], ['like','super_like']) && ! $user->hasFeature('Unlimited Swipes')) {
             $limit = (int) (optional(AppSetting::where('key','daily_swipe_limit')->first())->value ?? 0);
             if ($limit > 0) {
@@ -36,7 +42,9 @@ class LikeController extends Controller
 
         if ($validated['type'] === 'super_like') {
             $price = (int) (optional(AppSetting::where('key','price_super_like')->first())->value ?? 0);
-            if ($price > 0) {
+            $todaySuperLikes = Like::where('from_user_id', $user->id)->where('type','super_like')->whereDate('created_at', now()->toDateString())->count();
+            $hasFree = $todaySuperLikes === 0;
+            if ($price > 0 && ! $hasFree) {
                 $balance = (int) UserCreditLedger::where('user_id', $user->id)->sum('change');
                 if ($balance < $price) {
                     return response()->json(['error' => 'Insufficient credits'], 402);
@@ -91,9 +99,6 @@ class LikeController extends Controller
     public function likedMe(Request $request)
     {
         $user = $request->user();
-        if (! $user->hasFeature('See Who Liked Me')) {
-            return redirect()->route('app.premium');
-        }
         $likes = Like::where('to_user_id', $user->id)->whereIn('type', ['like','super_like'])->get();
         $items = $likes->map(function ($l) {
             $u = \App\Models\User::find($l->from_user_id);
@@ -105,6 +110,7 @@ class LikeController extends Controller
             }
             return ['id' => $u->id, 'name' => $u->name, 'photo' => $photo ? \Illuminate\Support\Facades\Storage::url($photo) : null];
         });
-        return Inertia::render('App/LikedMe', ['items' => $items]);
+        $needsUpgrade = ! $user->hasFeature('See Who Liked Me');
+        return Inertia::render('App/LikedMe', ['items' => $items, 'needsUpgrade' => $needsUpgrade]);
     }
 }

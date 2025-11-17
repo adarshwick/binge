@@ -191,7 +191,12 @@ export default function Show({ match_id }) {
     <ChatLayout>
       <div className="bg-white border rounded h-96 flex flex-col">
         <div className="border-b px-4 py-2 flex items-center justify-between">
-          <div className="font-semibold">Conversation {match_id}</div>
+          <div className="font-semibold flex items-center gap-3">
+            <span>Conversation {match_id}</span>
+            {usePage().props.other_id && (
+              <a className="text-blue-600 underline" href={route('app.user', { user_id: usePage().props.other_id })}>View Profile</a>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             {typing && <div className="text-sm text-gray-500">Typing...</div>}
             {usePage().props.settings?.feature_video_chat && (

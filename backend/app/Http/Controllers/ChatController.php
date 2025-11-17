@@ -17,6 +17,9 @@ class ChatController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $blockedOut = \App\Models\UserBlock::where('user_id', $user->id)->pluck('blocked_user_id')->toArray();
+        $blockedIn = \App\Models\UserBlock::where('blocked_user_id', $user->id)->pluck('user_id')->toArray();
+        $blockedIds = array_unique(array_merge($blockedOut, $blockedIn));
         $cacheKey = 'chat:list:user:'.$user->id;
         $conversations = \Illuminate\Support\Facades\Cache::remember($cacheKey, 10, function () use ($user) {
             $matches = UserMatch::query()
@@ -26,9 +29,10 @@ class ChatController extends Controller
                 ->get();
             return Conversation::whereIn('match_id', $matches->pluck('id'))
                 ->get()
-                ->map(function ($c) use ($user) {
+                ->map(function ($c) use ($user, $blockedIds) {
                     $m = UserMatch::find($c->match_id);
                     $otherId = $m->user_id_a === $user->id ? $m->user_id_b : $m->user_id_a;
+                    if (in_array($otherId, $blockedIds)) return null;
                     $other = User::find($otherId);
                     $last = Message::where('conversation_id', $c->id)->latest()->first();
                     $unread = Message::where('conversation_id', $c->id)->where('sender_id','!=',$user->id)->whereNull('read_at')->count();
@@ -38,7 +42,7 @@ class ChatController extends Controller
                         'last' => $last?->content ?? '',
                         'unread' => $unread,
                     ];
-                });
+                })->filter()->values();
         });
         return Inertia::render('App/Chat/Index', ['list' => $conversations]);
     }
@@ -46,6 +50,14 @@ class ChatController extends Controller
     public function show(Request $request, $match_id)
     {
         $conversation = Conversation::where('match_id', $match_id)->first();
+        if ($conversation) {
+            $m = UserMatch::find($conversation->match_id);
+            $user = $request->user();
+            $otherId = $m->user_id_a === $user->id ? $m->user_id_b : $m->user_id_a;
+            $blocked = \App\Models\UserBlock::where('user_id', $user->id)->where('blocked_user_id', $otherId)->exists()
+                || \App\Models\UserBlock::where('user_id', $otherId)->where('blocked_user_id', $user->id)->exists();
+            if ($blocked) abort(403);
+        }
         if ($conversation) {
             Message::where('conversation_id', $conversation->id)
                 ->where('sender_id', '!=', $request->user()->id)
@@ -61,7 +73,12 @@ class ChatController extends Controller
             $minId = $batch->min('id');
             $hasMore = $minId ? Message::where('conversation_id', $conversation->id)->where('id', '<', $minId)->exists() : false;
         }
-        return Inertia::render('App/Chat/Show', ['match_id' => $match_id, 'messages' => $messages, 'has_more' => $hasMore]);
+        $otherId = null;
+        if ($conversation) {
+            $m = UserMatch::find($conversation->match_id);
+            $otherId = $m->user_id_a === $request->user()->id ? $m->user_id_b : $m->user_id_a;
+        }
+        return Inertia::render('App/Chat/Show', ['match_id' => $match_id, 'messages' => $messages, 'has_more' => $hasMore, 'other_id' => $otherId]);
     }
 
     public function send(Request $request, $match_id)

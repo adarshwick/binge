@@ -21,6 +21,7 @@ class OnboardingController extends Controller
             'lat' => ['nullable','numeric'],
             'lng' => ['nullable','numeric'],
             'answers' => ['nullable','array'],
+            'bio' => ['nullable','string'],
         ]);
         $user = $request->user();
         $user->fill($data);

@@ -37,7 +37,7 @@ export default function Profile() {
         ))}
         <div className="flex justify-between">
           <Link href={route('onboarding.photos')} className="px-4 py-2 border rounded">Back</Link>
-          <Link href={route('onboarding.filters')} className="px-4 py-2 bg-pink-600 text-white rounded" data-answers={JSON.stringify(answers)}>Next</Link>
+          <Link href={route('onboarding.filters')} className="px-4 py-2 bg-pink-600 text-white rounded" data-answers={JSON.stringify(answers)} data-bio={bio}>Next</Link>
         </div>
       </div>
     </div>

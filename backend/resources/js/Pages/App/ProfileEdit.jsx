@@ -1,9 +1,11 @@
 import MainAppShell from '../../Layouts/MainAppShell'
 import { usePage, router } from '@inertiajs/react'
+import { useState } from 'react'
 
 export default function ProfileEdit() {
   const { props } = usePage()
   const photos = props.photos || []
+  const [bio, setBio] = useState(props.auth?.user?.bio || '')
   function upload(e) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -15,10 +17,10 @@ export default function ProfileEdit() {
     <MainAppShell>
       <div className="max-w-xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={e => { e.preventDefault(); router.post(route('app.profile.bio'), { bio }) }}>
           <div>
             <label className="block text-sm font-medium mb-1">Bio</label>
-            <textarea className="w-full border rounded px-3 py-2" rows={4} />
+            <textarea className="w-full border rounded px-3 py-2" rows={4} value={bio} onChange={e => setBio(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Photos</label>

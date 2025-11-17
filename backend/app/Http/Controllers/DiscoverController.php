@@ -15,6 +15,9 @@ class DiscoverController extends Controller
     {
         $user = $request->user();
         $excludedIds = Like::where('from_user_id', $user->id)->pluck('to_user_id')->toArray();
+        $blockedOut = \App\Models\UserBlock::where('user_id', $user->id)->pluck('blocked_user_id')->toArray();
+        $blockedIn = \App\Models\UserBlock::where('blocked_user_id', $user->id)->pluck('user_id')->toArray();
+        $blockedIds = array_unique(array_merge($blockedOut, $blockedIn));
         $cacheKey = 'discover:'.implode(':', [
             $user->id,
             $user->pref_gender ?? 'any',
@@ -28,6 +31,7 @@ class DiscoverController extends Controller
             return User::query()
             ->where('id', '!=', $user->id)
             ->whereNotIn('id', $excludedIds)
+            ->whereNotIn('id', $blockedIds)
             ->when($user->pref_gender && $user->pref_gender !== 'any', fn($q) => $q->where('gender', $user->pref_gender))
             ->get(['id','name','email','dob','lat','lng','gender','boost_until','created_at']);
         });

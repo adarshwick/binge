@@ -24,7 +24,7 @@ class BoostController extends Controller
                 'meta' => [],
             ]);
         }
-        $user->boost_until = now()->addMinutes(15);
+        $user->boost_until = now()->addMinutes(30);
         $user->save();
         return response()->json(['boost_until' => $user->boost_until]);
     }

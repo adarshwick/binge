@@ -8,6 +8,7 @@ export default function Filters() {
   const [latlng, setLatlng] = useState({ lat: null, lng: null })
   const profileLink = document.querySelector('[data-answers]')
   const answers = profileLink ? JSON.parse(profileLink.getAttribute('data-answers') || '{}') : {}
+  const bio = profileLink ? (profileLink.getAttribute('data-bio') || '') : ''
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => setLatlng({ lat: pos.coords.latitude, lng: pos.coords.longitude }))
@@ -37,7 +38,7 @@ export default function Filters() {
           <button
             className="px-4 py-2 bg-green-600 text-white rounded"
             onClick={() => router.post(route('onboarding.complete'), {
-              pref_min_age: age[0], pref_max_age: age[1], pref_distance_km: distance, pref_gender: gender, lat: latlng.lat, lng: latlng.lng, answers
+              pref_min_age: age[0], pref_max_age: age[1], pref_distance_km: distance, pref_gender: gender, lat: latlng.lat, lng: latlng.lng, answers, bio
             })}
           >Finish</button>
         </div>

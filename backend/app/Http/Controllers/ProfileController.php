@@ -60,4 +60,13 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function updateBio(Request $request): RedirectResponse
+    {
+        $data = $request->validate(['bio' => ['nullable','string']]);
+        $user = $request->user();
+        $user->bio = $data['bio'] ?? null;
+        $user->save();
+        return Redirect::route('app.profile.edit');
+    }
 }
