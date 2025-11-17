@@ -225,7 +225,7 @@ export default function Show({ match_id }) {
             )}
           </div>
         </div>
-        <div className="flex-1 p-4 space-y-2 overflow-auto">
+        <div className="flex-1 p-4 space-y-3 overflow-auto">
           {(usePage().props.settings?.chat_provider === 'firebase' && window.ChatProvider)
             ? firebaseRender()
             : (
@@ -240,7 +240,7 @@ export default function Show({ match_id }) {
                   }}>Load more</button>
                 )}
                 {msgs.map(m => (
-                  <div key={m.id} className={(m.sender_id === user?.id ? 'self-end bg-pink-600 text-white' : 'self-start bg-gray-100 text-gray-900') + ' max-w-xs px-3 py-2 rounded'}>
+                  <div key={m.id} className={(m.sender_id === user?.id ? 'self-end bg-pink-600 text-white' : 'self-start bg-gray-100 text-gray-900') + ' max-w-xs px-4 py-3 rounded-2xl shadow-sm'}>
                     {m.type === 'voice' ? (<audio src={m.content} controls />) : (m.type === 'image' ? (<img src={m.content} alt="image" className="max-w-full rounded"/>) : m.content)}
                     {m.sender_id === user?.id && (
                       <div className="mt-1 text-[10px] opacity-75">
@@ -258,15 +258,15 @@ export default function Show({ match_id }) {
             <video ref={remoteVideoRef} autoPlay className="w-full h-40 bg-black" />
           </div>
         )}
-        <div className="border-t p-2 flex items-center gap-2">
-          <input className="flex-1 border rounded px-3 py-2" placeholder="Type a message" value={inputValue} onChange={e => {
+        <div className="border-t p-3 flex items-center gap-2">
+          <input className="flex-1 border rounded-full px-4 py-2" placeholder="Type a message" value={inputValue} onChange={e => {
             setInputValue(e.target.value)
             if (typingTimerRef.current) clearTimeout(typingTimerRef.current)
             typingTimerRef.current = setTimeout(() => {
               router.post(route('app.chat.typing', { match_id }), {}, { preserveScroll: true })
             }, 400)
           }} />
-          <button className="px-3 py-2 border rounded">GIF</button>
+          <button className="px-3 py-2 border rounded-full">GIF</button>
           <input id="image_input" type="file" accept="image/*" className="hidden" onChange={async e => {
             const file = e.target.files?.[0]
             if (!file) return
@@ -281,7 +281,7 @@ export default function Show({ match_id }) {
             }
             e.target.value = ''
           }} />
-          <button className="px-3 py-2 border rounded" onClick={() => document.getElementById('image_input').click()}>Image</button>
+          <button className="px-3 py-2 border rounded-full" onClick={() => document.getElementById('image_input').click()}>Image</button>
           {usePage().props.settings?.feature_voice_notes && (
             <>
               <input id="voice_input" type="file" accept="audio/*" className="hidden" onChange={e => {
@@ -291,10 +291,10 @@ export default function Show({ match_id }) {
                 form.append('voice', file)
                 router.post(route('app.chat.voice', { match_id }), form, { preserveScroll: true })
               }} />
-              <button className="px-3 py-2 border rounded" onClick={() => document.getElementById('voice_input').click()}>Voice</button>
+              <button className="px-3 py-2 border rounded-full" onClick={() => document.getElementById('voice_input').click()}>Voice</button>
             </>
           )}
-          <button className="px-3 py-2 bg-pink-600 text-white rounded" onClick={send}>Send</button>
+          <button className="px-4 py-2 bg-pink-600 text-white rounded-full" onClick={send}>Send</button>
         </div>
       </div>
     </ChatLayout>

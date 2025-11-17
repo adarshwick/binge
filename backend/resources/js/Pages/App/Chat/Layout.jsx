@@ -22,16 +22,23 @@ export default function ChatLayout({ children }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-1">
           <h2 className="text-xl font-semibold mb-2">Conversations</h2>
-          <div className="bg-white border rounded divide-y">
+          <div className="bg-white rounded-2xl shadow overflow-hidden">
             {list.map(m => (
               <a key={m.id} href={`/app/chat/${m.id}`} className="block px-4 py-3 hover:bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">{m.name}</div>
-                  {m.unread > 0 && (
-                    <span className="ml-2 inline-block bg-pink-600 text-white text-xs px-2 py-0.5 rounded-full">{m.unread}</span>
-                  )}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-700 font-semibold">
+                    {String(m.name || '').slice(0,1).toUpperCase()}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium">{m.name}</div>
+                      {m.unread > 0 && (
+                        <span className="ml-2 inline-block bg-pink-600 text-white text-xs px-2 py-0.5 rounded-full">{m.unread}</span>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-500 truncate">{m.last}</div>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-500">{m.last}</div>
               </a>
             ))}
           </div>
