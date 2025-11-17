@@ -1,7 +1,7 @@
 {
   "appId": "com.binge.app",
   "appName": "Binge",
-  "webDir": "web",
+  "webDir": "../backend/public",
   "server": {
     "androidScheme": "https"
   }

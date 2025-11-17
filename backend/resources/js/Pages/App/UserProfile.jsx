@@ -13,6 +13,7 @@ export default function UserProfile() {
           <h1 className="text-2xl font-bold">{user.name}</h1>
           <div className="flex gap-2">
             <button className="px-3 py-2 border rounded" onClick={() => router.post(route('app.block'), { user_id: user.id })}>Block</button>
+            <button className="px-3 py-2 border rounded" onClick={() => router.post(route('app.match.unmatch', { user_id: user.id }))}>Unmatch</button>
             <button className="px-3 py-2 border rounded" onClick={() => {
               const reason = prompt('Enter report reason') || 'inappropriate'
               router.post(route('app.report'), { user_id: user.id, reason })

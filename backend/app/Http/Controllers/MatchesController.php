@@ -34,4 +34,17 @@ class MatchesController extends Controller
             });
         return Inertia::render('App/Matches', ['items' => $matches]);
     }
+
+    public function unmatch(Request $request, $user_id)
+    {
+        $user = $request->user();
+        $a = min($user->id, (int) $user_id);
+        $b = max($user->id, (int) $user_id);
+        $match = UserMatch::where('user_id_a', $a)->where('user_id_b', $b)->first();
+        if ($match) {
+            \App\Models\Conversation::where('match_id', $match->id)->delete();
+            $match->delete();
+        }
+        return back();
+    }
 }

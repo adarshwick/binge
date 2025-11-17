@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/app/liked-me', [\App\Http\Controllers\LikeController::class, 'likedMe'])->name('app.liked_me');
     Route::post('/app/boost', [\App\Http\Controllers\BoostController::class, 'apply'])->middleware('throttle:20,1')->name('app.boost');
     Route::get('/app/matches', [\App\Http\Controllers\MatchesController::class, 'index'])->name('app.matches');
+    Route::post('/app/match/{user_id}/unmatch', [\App\Http\Controllers\MatchesController::class, 'unmatch'])->name('app.match.unmatch');
     Route::get('/app/user/{user_id}', [\App\Http\Controllers\UserProfileController::class, 'show'])->name('app.user');
     Route::get('/app/chat', [\App\Http\Controllers\ChatController::class, 'index'])->name('app.chat');
     Route::get('/app/chat/{match_id}', [\App\Http\Controllers\ChatController::class, 'show'])->name('app.chat.show');
