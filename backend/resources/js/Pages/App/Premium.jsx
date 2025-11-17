@@ -7,18 +7,18 @@ export default function Premium({ mode, plans = [], creditPacks = [], subscripti
   const canceled = params.get('canceled') === '1'
   return (
     <MainAppShell>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-2">Go Premium</h1>
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold mb-2">Go Premium</h1>
         <p className="text-gray-600 mb-2">Business Model: {mode}</p>
         <p className="text-gray-600 mb-6">Credits: {window?.Inertia?.page?.props?.auth?.creditBalance ?? 0}</p>
         {success && (
-          <div className="mb-4 p-3 border rounded bg-green-50 text-green-700">Payment succeeded. Your purchase will reflect shortly.</div>
+          <div className="mb-4 p-3 rounded-2xl bg-green-50 text-green-700 shadow">Payment succeeded. Your purchase will reflect shortly.</div>
         )}
         {canceled && (
-          <div className="mb-4 p-3 border rounded bg-yellow-50 text-yellow-700">Payment canceled.</div>
+          <div className="mb-4 p-3 rounded-2xl bg-yellow-50 text-yellow-700 shadow">Payment canceled.</div>
         )}
         {subscription && (
-          <div className="mb-6 p-4 border rounded bg-green-50 text-green-700">
+          <div className="mb-6 p-4 rounded-2xl bg-green-50 text-green-700 shadow">
             <div className="font-medium">Active Plan: {subscription.plan}</div>
             {subscription.ends_at && <div>Expires: {new Date(subscription.ends_at).toLocaleString()}</div>}
           </div>
@@ -26,20 +26,20 @@ export default function Premium({ mode, plans = [], creditPacks = [], subscripti
         {!!plans.length && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-3">Subscription Plans</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {plans.map((p, i) => (
-                <div key={i} className="bg-white border rounded p-4">
+                <div key={i} className="bg-white rounded-2xl shadow p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="font-medium">{p.name}</div>
-                    <div className="text-pink-600">{p.price}</div>
+                    <div className="font-semibold text-lg">{p.name}</div>
+                    <div className="px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-sm">{p.price}</div>
                   </div>
-                  <ul className="text-sm text-gray-600 list-disc ml-5">
+                  <ul className="text-sm text-gray-700 list-disc ml-5">
                     {p.features.map((f, j) => <li key={j}>{f}</li>)}
                   </ul>
                   <div className="mt-3 flex gap-2">
-                    <button className="px-4 py-2 bg-pink-600 text-white rounded" onClick={() => router.post(route('app.premium.subscribe'), { plan_id: p.id })}>Choose</button>
-                    <button className="px-4 py-2 border rounded" onClick={() => fetch(route('app.premium.stripe_checkout'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'subscription', id: p.id }) }).then(r => r.json()).then(j => window.location.href = j.url)}>Stripe</button>
-                    <button className="px-4 py-2 border rounded" onClick={() => fetch(route('app.premium.paypal_order'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'subscription', id: p.id }) }).then(r => r.json()).then(j => alert(`PayPal order: ${j.id}`))}>PayPal</button>
+                    <button className="px-4 py-2 bg-pink-600 text-white rounded-full" onClick={() => router.post(route('app.premium.subscribe'), { plan_id: p.id })}>Choose</button>
+                    <button className="px-4 py-2 border rounded-full" onClick={() => fetch(route('app.premium.stripe_checkout'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'subscription', id: p.id }) }).then(r => r.json()).then(j => window.location.href = j.url)}>Stripe</button>
+                    <button className="px-4 py-2 border rounded-full" onClick={() => fetch(route('app.premium.paypal_order'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'subscription', id: p.id }) }).then(r => r.json()).then(j => alert(`PayPal order: ${j.id}`))}>PayPal</button>
                   </div>
                 </div>
               ))}
@@ -49,15 +49,15 @@ export default function Premium({ mode, plans = [], creditPacks = [], subscripti
         {!!creditPacks.length && (
           <div>
             <h2 className="text-xl font-semibold mb-3">Credit Packs</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {creditPacks.map((c, i) => (
-                <div key={i} className="bg-white border rounded p-4">
-                  <div className="font-medium mb-1">{c.name}</div>
+                <div key={i} className="bg-white rounded-2xl shadow p-4 text-center">
+                  <div className="font-semibold mb-1">{c.name}</div>
                   <div className="text-pink-600 mb-2">{c.price}</div>
-                  <div className="mt-2 flex gap-2">
-                    <button className="px-4 py-2 bg-purple-600 text-white rounded" onClick={() => router.post(route('app.premium.credits'), { pack_id: c.id })}>Buy</button>
-                    <button className="px-4 py-2 border rounded" onClick={() => fetch(route('app.premium.stripe_checkout'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'credits', id: c.id }) }).then(r => r.json()).then(j => window.location.href = j.url)}>Stripe</button>
-                    <button className="px-4 py-2 border rounded" onClick={() => fetch(route('app.premium.paypal_order'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'credits', id: c.id }) }).then(r => r.json()).then(j => {
+                  <div className="mt-2 flex gap-2 justify-center">
+                    <button className="px-4 py-2 bg-purple-600 text-white rounded-full" onClick={() => router.post(route('app.premium.credits'), { pack_id: c.id })}>Buy</button>
+                    <button className="px-4 py-2 border rounded-full" onClick={() => fetch(route('app.premium.stripe_checkout'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'credits', id: c.id }) }).then(r => r.json()).then(j => window.location.href = j.url)}>Stripe</button>
+                    <button className="px-4 py-2 border rounded-full" onClick={() => fetch(route('app.premium.paypal_order'), { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify({ type: 'credits', id: c.id }) }).then(r => r.json()).then(j => {
                       const link = (j.links || []).find(l => l.rel === 'approve')
                       if (link?.href) window.location.href = link.href
                     })}>PayPal</button>
