@@ -83,8 +83,16 @@ Route::middleware('auth')->group(function () {
         $prompts = \App\Models\ProfilePrompt::where('active', true)->get(['id','text']);
         return Inertia::render('Onboarding/Profile', ['prompts' => $prompts]);
     })->name('onboarding.profile');
-    Route::get('/onboarding/filters', function () {
-        return Inertia::render('Onboarding/Filters');
+    Route::get('/onboarding/filters', function (\Illuminate\Http\Request $request) {
+        $answers = $request->query('answers');
+        if (is_string($answers)) {
+            $decoded = json_decode($answers, true);
+            $answers = is_array($decoded) ? $decoded : [];
+        }
+        return Inertia::render('Onboarding/Filters', [
+            'answers' => $answers ?: [],
+            'bio' => $request->query('bio'),
+        ]);
     })->name('onboarding.filters');
     Route::post('/onboarding/complete', [\App\Http\Controllers\OnboardingController::class, 'complete'])->name('onboarding.complete');
     Route::post('/onboarding/selfie', [\App\Http\Controllers\OnboardingController::class, 'selfie'])->middleware('throttle:10,1')->name('onboarding.selfie');

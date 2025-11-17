@@ -6,9 +6,9 @@ export default function Filters() {
   const [distance, setDistance] = useState(25)
   const [gender, setGender] = useState('any')
   const [latlng, setLatlng] = useState({ lat: null, lng: null })
-  const profileLink = document.querySelector('[data-answers]')
-  const answers = profileLink ? JSON.parse(profileLink.getAttribute('data-answers') || '{}') : {}
-  const bio = profileLink ? (profileLink.getAttribute('data-bio') || '') : ''
+  const { props } = usePage()
+  const answers = props.answers || {}
+  const bio = props.bio || ''
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => setLatlng({ lat: pos.coords.latitude, lng: pos.coords.longitude }))
