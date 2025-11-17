@@ -25,6 +25,7 @@ if (!auth?.user) {
   window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_KEY || 'local',
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || 'mt1',
     wsHost: import.meta.env.VITE_REVERB_HOST || window.location.hostname,
     wsPort: Number(import.meta.env.VITE_REVERB_PORT || 8080),
     forceTLS: false,
