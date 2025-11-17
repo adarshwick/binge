@@ -3,9 +3,13 @@ import Pusher from 'pusher-js'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore'
 
-const settings = window?.Inertia?.page?.props?.settings || {}
+const page = window?.Inertia?.page || { props: {} }
+const settings = page.props?.settings || {}
+const auth = page.props?.auth || {}
 
-if (settings.chat_provider === 'firebase') {
+if (!auth?.user) {
+  // Skip realtime init on guest pages
+} else if (settings.chat_provider === 'firebase') {
   const firebaseConfig = {
     apiKey: settings.firebase_api_key,
     projectId: settings.firebase_project_id,
