@@ -1,0 +1,8 @@
+{
+  "appId": "com.binge.app",
+  "appName": "Binge",
+  "webDir": "web",
+  "server": {
+    "androidScheme": "https"
+  }
+}
